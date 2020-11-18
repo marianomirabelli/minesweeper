@@ -1,0 +1,12 @@
+server:
+  servlet:
+    context-path: /api/minesweeper
+  port: 8080
+management:
+  endpoints:
+    enabled-by-default: true
+    web:
+      base-path: /
+    endpoint:
+      health:
+        show-details: always
