@@ -1,4 +1,4 @@
-package com.deviget.minesweeper.model;
+package com.deviget.minesweeper.service.model;
 
 import nonapi.io.github.classgraph.json.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

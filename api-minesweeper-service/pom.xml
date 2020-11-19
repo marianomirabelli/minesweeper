@@ -14,7 +14,7 @@
 
     <properties>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <app.mainClass>com.deviget.minesweeper.App</app.mainClass>
+        <app.mainClass>com.deviget.minesweeper.service.App</app.mainClass>
         <orika.version>1.5.4</orika.version>
         <junit.version>5.7.0</junit.version>
         <swagger.version>3.0.0</swagger.version>
@@ -44,6 +44,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
             <version>${spring-boot.version}</version>
         </dependency>
 

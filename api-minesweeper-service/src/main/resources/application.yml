@@ -10,3 +10,7 @@ management:
     endpoint:
       health:
         show-details: always
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://application:foobar@minescluster.jw2wr.mongodb.net/minesweeper?retryWrites=true&w=majority
