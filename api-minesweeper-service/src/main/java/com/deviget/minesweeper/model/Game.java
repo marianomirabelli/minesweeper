@@ -1,8 +1,14 @@
 package com.deviget.minesweeper.model;
 
+import nonapi.io.github.classgraph.json.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document
 public class Game {
 
+    @Id
     private String id;
+    private String userId;
     private Board board;
     private GameStatus status;
 

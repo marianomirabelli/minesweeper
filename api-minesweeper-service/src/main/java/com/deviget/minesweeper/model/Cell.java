@@ -4,15 +4,19 @@ public class Cell {
 
     private int row;
     private int column;
+    private int minesAround;
     private boolean mine;
-    private boolean opened;
+    private boolean flipped;
+    private boolean marked;
+    private boolean flagged;
 
 
     public Cell(int row, int column) {
         this.row = row;
         this.column = column;
-        this.mine = mine;
-        this.opened = false;
+        this.mine = false;
+        this.flipped = false;
+        this.minesAround = 0;
     }
 
     public int getRow() {
@@ -39,13 +43,39 @@ public class Cell {
         this.mine = mine;
     }
 
-    public boolean isOpened() {
-        return opened;
+    public boolean isFlipped() {
+        return flipped;
     }
 
-    public void setOpened(boolean opened) {
-        this.opened = opened;
+    public void setFlipped(boolean flipped) {
+        this.flipped = flipped;
     }
 
+    public boolean isMarked() {
+        return marked;
+    }
 
+    public void setMarked(boolean marked) {
+        this.marked = marked;
+    }
+
+    public boolean isFlagged() {
+        return flagged;
+    }
+
+    public void setFlagged(boolean flagged) {
+        this.flagged = flagged;
+    }
+
+    public int getMinesAround() {
+        return minesAround;
+    }
+
+    public void setMinesAround(int minesAround) {
+        this.minesAround = minesAround;
+    }
+
+    public void incrementMinesAround(){
+        this.minesAround+=1;
+    }
 }
