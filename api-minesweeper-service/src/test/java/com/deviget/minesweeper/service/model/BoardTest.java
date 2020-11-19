@@ -1,11 +1,13 @@
 package com.deviget.minesweeper.service.model;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class BoardTest {
@@ -43,4 +45,28 @@ public class BoardTest {
         }
 
     }
+
+    @Test
+    @DisplayName("Validate Neighoburs Cells are correctly initialized")
+    public void validateNeighboursAreCorrectlyInitialized(){
+        Board board = new Board(3, 3, 2);
+        Cell cell = board.getCells()[1][1];
+        List<Cell> neighbours = cell.getNeighbours();
+        Assertions.assertEquals(8,neighbours.size());
+        assertNeighbourCoordinates(1,2,neighbours.get(0));
+        assertNeighbourCoordinates(1,0,neighbours.get(1));
+        assertNeighbourCoordinates(0,0,neighbours.get(2));
+        assertNeighbourCoordinates(0,1,neighbours.get(3));
+        assertNeighbourCoordinates(0,2,neighbours.get(4));
+        assertNeighbourCoordinates(2,0,neighbours.get(5));
+        assertNeighbourCoordinates(2,1,neighbours.get(6));
+        assertNeighbourCoordinates(2,2,neighbours.get(7));
+    }
+
+
+    private void assertNeighbourCoordinates(int row, int column, Cell neighbour){
+        Assertions.assertEquals(row,neighbour.getRow());
+        Assertions.assertEquals(column,neighbour.getColumn());
+    }
+
 }
