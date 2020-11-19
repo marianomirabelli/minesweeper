@@ -1,21 +1,23 @@
 package com.deviget.minesweeper.service.model;
 
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Board {
 
     private int rows;
     private int columns;
-    private int mines;
+    private int numberOfMines;
     private Cell[][] cells;
+    private List<Cell> mines;
 
-    public Board(int rows, int columns, int mines) {
+    public Board(int rows, int columns, int numberOfMines) {
         this.rows = rows;
         this.columns = columns;
-        this.mines = mines;
+        this.numberOfMines = numberOfMines;
+        this.mines = new ArrayList<>(numberOfMines);
         initializeBoard();
     }
-
 
     private void initializeBoard() {
         this.cells = new Cell[rows][columns];
@@ -24,20 +26,23 @@ public class Board {
                 this.cells[i][j] = new Cell(i, j);
             }
         }
-        Random randomGenerator = new Random();
-        for (int k = 0; k < this.mines; k++) {
-            int row = randomGenerator.nextInt(this.rows);
-            int column = randomGenerator.nextInt(this.columns);
-            this.cells[row][column].setMine(true);
-            this.incrementEdgeCellCounters(this.cells[row][column]);
+        int minesPlaces = 0;
+        while(minesPlaces<this.numberOfMines){
+            int row = (int)(Math.random() * this.rows);
+            int column = (int)(Math.random() * this.columns);
+            Cell currentCell = this.cells[row][column];
+            if(!currentCell.isMine()){
+                this.cells[row][column].setMine(true);
+                this.mines.add(this.cells[row][column]);
+                this.neighbours(this.cells[row][column]).stream().filter(c -> !c.isMine()).forEach(cell -> cell.incrementMinesAround());
+                minesPlaces++;
+            }
         }
-
     }
 
-    private void incrementEdgeCellCounters(Cell currentMineCell) {
-
-        int rowPosition = currentMineCell.getRow();
-        int columnPosition = currentMineCell.getColumn();
+    public List<Cell> neighbours(Cell cell) {
+        int rowPosition = cell.getRow();
+        int columnPosition = cell.getColumn();
 
         int[][] neighbourCoordinates = {{rowPosition, columnPosition + 1},
                 {rowPosition, columnPosition - 1},
@@ -48,27 +53,16 @@ public class Board {
                 {rowPosition + 1, columnPosition},
                 {rowPosition + 1, columnPosition + 1}};
 
-        for(int [] coordinates : neighbourCoordinates){
-            Cell currentNeighbour = this.getCells()[coordinates[0]][coordinates[1]];
-            if(isValidCell(currentNeighbour)){
-                currentNeighbour.incrementMinesAround();
+        final List<Cell> neighboursCells = new ArrayList<>();
+        for (int[] coordinates : neighbourCoordinates) {
+            if ((coordinates[0] >= 0 && coordinates[0] < this.rows) &&
+                    (coordinates[1] >= 0 && coordinates[1] < this.columns)) {
+                neighboursCells.add(this.cells[coordinates[0]][coordinates[1]]);
             }
         }
-    }
 
+        return neighboursCells;
 
-    private boolean isValidCell(Cell cell) {
-
-        if (cell.isMine()) {
-            return false;
-        }
-
-        if ((cell.getRow() <= 0 || cell.getRow() >= this.rows) ||
-             (cell.getColumn() <= 0 || cell.getColumn() >= this.columns)) {
-            return false;
-        }
-
-        return true;
     }
 
 
@@ -88,12 +82,12 @@ public class Board {
         this.columns = columns;
     }
 
-    public int getMines() {
-        return mines;
+    public int getNumberOfMines() {
+        return numberOfMines;
     }
 
-    public void setMines(int mines) {
-        this.mines = mines;
+    public void setNumberOfMines(int numberOfMines) {
+        this.numberOfMines = numberOfMines;
     }
 
     public Cell[][] getCells() {
@@ -103,5 +97,10 @@ public class Board {
     public void setCells(Cell[][] cells) {
         this.cells = cells;
     }
+
+    public List<Cell> getMines() {
+        return mines;
+    }
+
 
 }
