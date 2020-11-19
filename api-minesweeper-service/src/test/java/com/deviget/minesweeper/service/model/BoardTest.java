@@ -18,15 +18,14 @@ public class BoardTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("Validate Counters Around Mines Cells")
     public void validateCountersAroundMines() {
         Board board = new Board(3, 3, 2);
         Iterator<Cell> it = board.getMines().iterator();
         Cell mine1 = it.next();
         Cell mine2 = it.next();
-        Set<Cell> notMineNeighbours = new HashSet<>(board.neighbours(mine1).stream().filter(c -> !c.isMine()).collect(Collectors.toList()));
-        Set<Cell> notMineNeighbours2 = new HashSet(board.neighbours(mine2).stream().filter(c -> !c.isMine()).collect(Collectors.toList()));
+        Set<Cell> notMineNeighbours = new HashSet<>(mine1.getNeighbours().stream().filter(c -> !c.isMine()).collect(Collectors.toList()));
+        Set<Cell> notMineNeighbours2 = new HashSet(mine2.getNeighbours().stream().filter(c -> !c.isMine()).collect(Collectors.toList()));
 
         Set<Cell> intersection = new HashSet(notMineNeighbours);
         intersection.retainAll(notMineNeighbours2);

@@ -1,5 +1,9 @@
 package com.deviget.minesweeper.service.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 public class Cell {
 
     private int row;
@@ -9,6 +13,7 @@ public class Cell {
     private boolean flipped;
     private boolean marked;
     private boolean flagged;
+    private final List<Cell> neighbours;
 
 
     public Cell(int row, int column) {
@@ -17,6 +22,7 @@ public class Cell {
         this.mine = false;
         this.flipped = false;
         this.minesAround = 0;
+        this.neighbours = new ArrayList<>(8);
     }
 
     public int getRow() {
@@ -77,5 +83,32 @@ public class Cell {
 
     public void incrementMinesAround(){
         this.minesAround+=1;
+    }
+
+    public List<Cell> getNeighbours() {
+        return neighbours;
+    }
+
+    protected void addNeighbours(List<Cell> neighbours) {
+        this.neighbours.addAll(neighbours);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Cell)) return false;
+        Cell cell = (Cell) o;
+        return row == cell.row &&
+                column == cell.column &&
+                minesAround == cell.minesAround &&
+                mine == cell.mine &&
+                flipped == cell.flipped &&
+                marked == cell.marked &&
+                flagged == cell.flagged;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(row, column, minesAround, mine, flipped, marked, flagged);
     }
 }
