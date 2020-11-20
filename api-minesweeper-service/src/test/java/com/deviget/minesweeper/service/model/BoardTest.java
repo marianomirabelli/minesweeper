@@ -1,11 +1,13 @@
 package com.deviget.minesweeper.service.model;
 
-import com.deviget.minesweeper.service.util.BoardUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class BoardTest {
@@ -44,16 +46,17 @@ public class BoardTest {
     public void validateNeighboursAreCorrectlyInitialized(){
         Board board = new Board(3, 3, 2);
         Cell cell = board.getCells()[1][1];
+        Cell [][] cells = board.getCells();
         List<Cell> neighbours = board.getNeighbours(cell);
         Assertions.assertEquals(8,neighbours.size());
-        assertNeighbourCoordinates(1,2,neighbours.get(0));
-        assertNeighbourCoordinates(1,0,neighbours.get(1));
-        assertNeighbourCoordinates(0,0,neighbours.get(2));
-        assertNeighbourCoordinates(0,1,neighbours.get(3));
-        assertNeighbourCoordinates(0,2,neighbours.get(4));
-        assertNeighbourCoordinates(2,0,neighbours.get(5));
-        assertNeighbourCoordinates(2,1,neighbours.get(6));
-        assertNeighbourCoordinates(2,2,neighbours.get(7));
+        Assertions.assertEquals(cells[1][2],neighbours.get(0));
+        Assertions.assertEquals(cells[1][0],neighbours.get(1));
+        Assertions.assertEquals(cells[0][0],neighbours.get(2));
+        Assertions.assertEquals(cells[0][1],neighbours.get(3));
+        Assertions.assertEquals(cells[0][2],neighbours.get(4));
+        Assertions.assertEquals(cells[2][0],neighbours.get(5));
+        Assertions.assertEquals(cells[2][1],neighbours.get(6));
+        Assertions.assertEquals(cells[2][2],neighbours.get(7));
     }
 
 
@@ -71,7 +74,7 @@ public class BoardTest {
         cells[3][0].setMine(true);
         int[][] minesCoordinates = {{1, 2},{4, 4},{3,0}};
         Board board = new Board(cells,minesCoordinates);
-        BoardUtils.floodFlip(board,cells[0][0]);
+        board.floodFlip(cells[0][0]);
         Assertions.assertEquals(CellState.OPENED,cells[0][0].getState());
         Assertions.assertEquals(CellState.OPENED,cells[0][1].getState());
         Assertions.assertEquals(CellState.OPENED,cells[1][0].getState());
@@ -81,13 +84,6 @@ public class BoardTest {
         Assertions.assertEquals(CellState.CLOSED,cells[0][2].getState());
         Assertions.assertEquals(CellState.CLOSED,cells[1][2].getState());
         Assertions.assertEquals(CellState.CLOSED,cells[0][3].getState());
-    }
-
-
-
-    private void assertNeighbourCoordinates(int row, int column, Cell neighbour){
-        Assertions.assertEquals(row,neighbour.getRow());
-        Assertions.assertEquals(column,neighbour.getColumn());
     }
 
 }

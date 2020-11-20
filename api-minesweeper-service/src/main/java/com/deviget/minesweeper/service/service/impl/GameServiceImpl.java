@@ -3,7 +3,6 @@ package com.deviget.minesweeper.service.service.impl;
 import com.deviget.minesweeper.service.model.*;
 import com.deviget.minesweeper.service.repository.GameRepository;
 import com.deviget.minesweeper.service.service.GameService;
-import com.deviget.minesweeper.service.util.BoardUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,7 +31,7 @@ public class GameServiceImpl implements GameService {
         switch (move.getAction()){
             case FLAG -> cell.updateStatus(CellState.FLAGGED);
             case MARK -> cell.updateStatus(CellState.MARKED);
-            case FLIP -> BoardUtils.floodFlip(board,cell);
+            case FLIP -> board.floodFlip(cell);
 
         }
         return repository.save(game).getBoard();
