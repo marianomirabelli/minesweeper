@@ -1,6 +1,6 @@
 package com.deviget.minesweeper.service.model;
 
-public enum CellAction {
+public enum GameAction {
     FLAG,
     MARK,
     FLIP;

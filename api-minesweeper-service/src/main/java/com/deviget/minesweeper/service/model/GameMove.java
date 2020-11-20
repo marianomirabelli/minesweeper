@@ -4,9 +4,9 @@ public class GameMove {
 
     private int row;
     private int column;
-    private CellAction action;
+    private GameAction action;
 
-    public GameMove(int row, int column, CellAction action) {
+    public GameMove(int row, int column, GameAction action) {
         this.row = row;
         this.column = column;
         this.action = action;
@@ -28,11 +28,11 @@ public class GameMove {
         this.column = column;
     }
 
-    public CellAction getAction() {
+    public GameAction getAction() {
         return action;
     }
 
-    public void setAction(CellAction action) {
+    public void setAction(GameAction action) {
         this.action = action;
     }
 }
