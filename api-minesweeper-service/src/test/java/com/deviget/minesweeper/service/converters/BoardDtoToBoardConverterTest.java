@@ -2,15 +2,13 @@ package com.deviget.minesweeper.service.converters;
 
 import com.deviget.minesweeper.api.BoardDTO;
 import com.deviget.minesweeper.api.CellDTO;
-import com.deviget.minesweeper.api.CellStateDTO;
 import com.deviget.minesweeper.service.model.Board;
 import com.deviget.minesweeper.service.model.Cell;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-public class BoardConverterTest {
+public class BoardDtoToBoardConverterTest {
 
     private CellToCellDTOConverter cellToCellDTOConverter = Mockito.mock(CellToCellDTOConverter.class);
     private BoardToBoardDTOConverter boardToBoardDTOConverter = new BoardToBoardDTOConverter(cellToCellDTOConverter);
