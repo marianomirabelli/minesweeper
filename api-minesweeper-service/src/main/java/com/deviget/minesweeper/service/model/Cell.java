@@ -22,17 +22,11 @@ public class Cell {
         return row;
     }
 
-    public void setRow(int row) {
-        this.row = row;
-    }
 
     public int getColumn() {
         return column;
     }
 
-    public void setColumn(int column) {
-        this.column = column;
-    }
 
     public boolean isMine() {
         return mine;
@@ -47,7 +41,7 @@ public class Cell {
         return minesAround;
     }
 
-    protected void incrementMinesAround(){
+    public void incrementMinesAround(){
         this.minesAround+=1;
     }
 

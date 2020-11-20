@@ -5,18 +5,18 @@ import java.util.Objects;
 
 public class StartGameAction implements Serializable {
 
-    private int row;
+    private int rows;
     private int columns;
     private int mines;
 
     public StartGameAction(){}
 
-    public int getRow() {
-        return row;
+    public int getRows() {
+        return rows;
     }
 
-    public void setRow(int row) {
-        this.row = row;
+    public void setRows(int rows) {
+        this.rows = rows;
     }
 
     public int getColumns() {
@@ -40,20 +40,20 @@ public class StartGameAction implements Serializable {
         if (this == o) return true;
         if (!(o instanceof StartGameAction)) return false;
         StartGameAction that = (StartGameAction) o;
-        return row == that.row &&
+        return rows == that.rows &&
                 columns == that.columns &&
                 mines == that.mines;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(row, columns, mines);
+        return Objects.hash(rows, columns, mines);
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("StartGameAction{");
-        sb.append("row=").append(row);
+        sb.append("row=").append(rows);
         sb.append(", columns=").append(columns);
         sb.append(", mines=").append(mines);
         sb.append('}');

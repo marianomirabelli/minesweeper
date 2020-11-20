@@ -26,13 +26,13 @@ public class CellToCellDTOConverter implements Converter<Cell, CellDTO> {
     }
 
     private CellStateDTO convertOpenedCell(Cell cell){
-
-        if(cell.getMinesAround()==0){
-            return CellStateDTO.BLANK;
-        }else{
-            return CellStateDTO.NUMBERED;
+        if(!cell.isMine()){
+            if(cell.getMinesAround()==0){
+                return CellStateDTO.BLANK;
+            }else{
+                return CellStateDTO.NUMBERED;
+            }
         }
-
-
+        return CellStateDTO.MINE;
     }
 }

@@ -6,11 +6,13 @@ import com.deviget.minesweeper.api.StartGameAction;
 import com.deviget.minesweeper.service.model.Game;
 import com.deviget.minesweeper.service.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("game")
@@ -27,7 +29,7 @@ public class GameController {
 
     @PostMapping
     public ResponseEntity<GameDTO> startNewGame(@RequestBody StartGameAction action) {
-        Game game = service.createNewGame(action.getRow(), action.getColumns(), action.getMines());
+        Game game = service.createNewGame(action.getRows(), action.getColumns(), action.getMines());
         GameDTO gameDTO = conversionService.convert(game,GameDTO.class);
         ResponseEntity<GameDTO> responseEntity = new ResponseEntity(gameDTO, HttpStatus.CREATED);
         return responseEntity;
