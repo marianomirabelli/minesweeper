@@ -5,6 +5,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>api-minesweeper-service</artifactId>
+    <packaging>jar</packaging>
 
     <parent>
         <artifactId>api-minesweeper</artifactId>
@@ -16,12 +17,22 @@
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <app.mainClass>com.deviget.minesweeper.service.App</app.mainClass>
         <jackson.version>2.11.3</jackson.version>
+        <orika.version>1.5.4</orika.version>
         <junit.version>5.7.0</junit.version>
         <swagger.version>3.0.0</swagger.version>
         <api-minesweeper-api.version>0.0.1-SNAPSHOT</api-minesweeper-api.version>
     </properties>
 
+
     <dependencies>
+
+        <!-- API -->
+        <dependency>
+            <groupId>com.deviget.minesweeper</groupId>
+            <artifactId>api-minesweeper-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -53,11 +64,19 @@
             <version>${spring-boot.version}</version>
         </dependency>
 
+
         <!-- Jackson -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
             <version>${jackson.version}</version>
+        </dependency>
+
+        <!-- Orika -->
+        <dependency>
+            <groupId>ma.glasnost.orika</groupId>
+            <artifactId>orika-core</artifactId>
+            <version>${orika.version}</version>
         </dependency>
 
         <!-- Swagger -->
