@@ -15,7 +15,7 @@
     <properties>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <app.mainClass>com.deviget.minesweeper.service.App</app.mainClass>
-        <orika.version>1.5.4</orika.version>
+        <jackson.version>2.11.3</jackson.version>
         <junit.version>5.7.0</junit.version>
         <swagger.version>3.0.0</swagger.version>
         <api-minesweeper-api.version>0.0.1-SNAPSHOT</api-minesweeper-api.version>
@@ -53,11 +53,11 @@
             <version>${spring-boot.version}</version>
         </dependency>
 
-        <!-- Orika -->
+        <!-- Jackson -->
         <dependency>
-            <groupId>ma.glasnost.orika</groupId>
-            <artifactId>orika-core</artifactId>
-            <version>${orika.version}</version>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
 
         <!-- Swagger -->
