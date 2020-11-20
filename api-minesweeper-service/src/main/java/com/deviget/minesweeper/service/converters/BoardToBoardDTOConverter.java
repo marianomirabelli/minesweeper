@@ -30,7 +30,7 @@ public class BoardToBoardDTOConverter implements Converter<Board, BoardDTO> {
     private CellDTO[][] convertCells(Cell[][] cells, int rows, int columns) {
         CellDTO[][] cellDTOS = new CellDTO[rows][columns];
         for (int i = 0; i < rows; i++) {
-            for (int j = 0; i < columns; j++) {
+            for (int j = 0; j < columns; j++) {
                 cellDTOS[i][j] = cellToCellDTOConverter.convert(cells[i][j]);
             }
         }
