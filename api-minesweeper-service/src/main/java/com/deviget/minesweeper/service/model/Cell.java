@@ -1,7 +1,5 @@
 package com.deviget.minesweeper.service.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class Cell {
@@ -10,19 +8,14 @@ public class Cell {
     private int column;
     private int minesAround;
     private boolean mine;
-    private boolean flipped;
-    private boolean marked;
-    private boolean flagged;
-    private final List<Cell> neighbours;
-
+    private CellState state;
 
     public Cell(int row, int column) {
         this.row = row;
         this.column = column;
         this.mine = false;
-        this.flipped = false;
+        this.state = CellState.CLOSED;
         this.minesAround = 0;
-        this.neighbours = new ArrayList<>(8);
     }
 
     public int getRow() {
@@ -49,49 +42,23 @@ public class Cell {
         this.mine = mine;
     }
 
-    public boolean isFlipped() {
-        return flipped;
-    }
-
-    public void setFlipped(boolean flipped) {
-        this.flipped = flipped;
-    }
-
-    public boolean isMarked() {
-        return marked;
-    }
-
-    public void setMarked(boolean marked) {
-        this.marked = marked;
-    }
-
-    public boolean isFlagged() {
-        return flagged;
-    }
-
-    public void setFlagged(boolean flagged) {
-        this.flagged = flagged;
-    }
 
     public int getMinesAround() {
         return minesAround;
     }
 
-    public void setMinesAround(int minesAround) {
-        this.minesAround = minesAround;
-    }
-
-    public void incrementMinesAround(){
+    protected void incrementMinesAround(){
         this.minesAround+=1;
     }
 
-    public List<Cell> getNeighbours() {
-        return neighbours;
+    public CellState getState() {
+        return state;
     }
 
-    protected void addNeighbours(List<Cell> neighbours) {
-        this.neighbours.addAll(neighbours);
+    public void updateStatus(CellState state) {
+        this.state = state;
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -102,13 +69,11 @@ public class Cell {
                 column == cell.column &&
                 minesAround == cell.minesAround &&
                 mine == cell.mine &&
-                flipped == cell.flipped &&
-                marked == cell.marked &&
-                flagged == cell.flagged;
+                state == cell.state;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(row, column, minesAround, mine, flipped, marked, flagged);
+        return Objects.hash(row, column, minesAround, mine, state);
     }
 }

@@ -18,46 +18,59 @@ public class Board {
         init();
     }
 
-    private void init() {
+    public Board(Cell[][] cells, int[][] minesCoordinates){
+        this.cells = cells;
+        this.rows = cells.length;
+        this.columns = cells[0].length;
+        this.mines = new ArrayList<>(minesCoordinates.length);
+        this.numberOfMines = minesCoordinates.length;
+        this.placeMinesWithCoordinates(minesCoordinates);
+    }
+
+   private void init() {
         this.cells = new Cell[rows][columns];
         this.initializeBoard();
         this.placeMines();
     }
 
-    private void initializeBoard(){
-        Queue<Cell> cellToInitialize = new LinkedList<>();
-        Set<Cell> visitedCells = new HashSet<>();
-        cellToInitialize.add(new Cell(0, 0));
-        while(!cellToInitialize.isEmpty()){
-            Cell cell = cellToInitialize.remove();
-            if(!visitedCells.contains(cell)){
-                visitedCells.add(cell);
-                List<Cell> neighbours = this.initializeNeighbours(cell);
-                cell.addNeighbours(neighbours);
-                cellToInitialize.addAll(neighbours);
-                if(Objects.isNull(this.cells[cell.getRow()][cell.getColumn()])){
-                    this.cells[cell.getRow()][cell.getColumn()] = cell;
-                }
+    private void initializeBoard() {
+        for(int i = 0 ; i< this.rows; i++){
+            for(int j = 0 ; j<this.columns; j++){
+                this.cells[i][j] = new Cell(i,j);
             }
+        }
+
+    }
+
+    private void placeMinesWithCoordinates(int[][] coordinates){
+        int row,column;
+        for(int [] coordinate:coordinates ){
+            row = coordinate[0];
+            column = coordinate[1];
+            this.cells[row][column].setMine(true);
+            this.getNeighbours(this.cells[row][column])
+                    .stream().filter(c -> !c.isMine()).forEach(cell -> cell.incrementMinesAround());
+            this.mines.add(this.cells[row][column]);
         }
     }
 
-    private void placeMines(){
+    private void placeMines() {
         int minesPlaces = 0;
-        while(minesPlaces<this.numberOfMines){
-            int row = (int)(Math.random() * this.rows);
-            int column = (int)(Math.random() * this.columns);
+        while (minesPlaces < this.numberOfMines) {
+            int row = (int) (Math.random() * this.rows);
+            int column = (int) (Math.random() * this.columns);
             Cell currentCell = this.cells[row][column];
-            if(!currentCell.isMine()){
+            if (!currentCell.isMine()) {
                 this.cells[row][column].setMine(true);
-                this.cells[row][column].getNeighbours().stream().filter(c -> !c.isMine()).forEach(cell -> cell.incrementMinesAround());
+                this.getNeighbours(this.cells[row][column])
+                            .stream().filter(c -> !c.isMine()).forEach(cell -> cell.incrementMinesAround());
                 this.mines.add(this.cells[row][column]);
                 minesPlaces++;
             }
         }
     }
 
-    private List<Cell> initializeNeighbours(Cell cell) {
+    public List<Cell> getNeighbours(Cell cell) {
         int rowPosition = cell.getRow();
         int columnPosition = cell.getColumn();
 
@@ -75,18 +88,10 @@ public class Board {
         for (int[] coordinates : neighbourCoordinates) {
             if ((coordinates[0] >= 0 && coordinates[0] < this.rows) &&
                     (coordinates[1] >= 0 && coordinates[1] < this.columns)) {
-
-                Cell neighbourCell = this.cells[coordinates[0]][coordinates[1]];
-                if(Objects.isNull(neighbourCell)){
-                    neighbourCell = new Cell(coordinates[0],coordinates[1]);
-                    this.cells[coordinates[0]][coordinates[1]] = neighbourCell;
-                }
-                neighboursCells.add(neighbourCell);
+                neighboursCells.add(this.cells[coordinates[0]][coordinates[1]]);
             }
         }
-
         return neighboursCells;
-
     }
 
 
@@ -116,10 +121,6 @@ public class Board {
 
     public Cell[][] getCells() {
         return cells;
-    }
-
-    public void setCells(Cell[][] cells) {
-        this.cells = cells;
     }
 
     public List<Cell> getMines() {
