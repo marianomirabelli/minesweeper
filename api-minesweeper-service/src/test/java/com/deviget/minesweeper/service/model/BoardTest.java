@@ -4,25 +4,22 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BoardTest {
 
     @Test
-    @DisplayName("Validate Counters Around Mines Cells")
+    @DisplayName("Check counters around mines cells")
     public void validateCountersAroundMines() {
         Board board = new Board(3, 3, 2);
         Iterator<Cell> it = board.getMines().iterator();
         Cell mine1 = it.next();
         Cell mine2 = it.next();
         Set<Cell> notMineNeighbours = new HashSet<>(board.getNeighbours(mine1).stream()
-                                                    .filter(c -> !c.isMine()).collect(Collectors.toList()));
+                .filter(c -> !c.isMine()).collect(Collectors.toList()));
         Set<Cell> notMineNeighbours2 = new HashSet(board.getNeighbours(mine2).stream()
-                                                    .filter(c -> !c.isMine()).collect(Collectors.toList()));
+                .filter(c -> !c.isMine()).collect(Collectors.toList()));
 
         Set<Cell> intersection = new HashSet(notMineNeighbours);
         intersection.retainAll(notMineNeighbours2);
@@ -31,59 +28,91 @@ public class BoardTest {
         symmetricDifference.addAll(notMineNeighbours2);
         symmetricDifference.removeAll(intersection);
 
-       for(Cell commonNeighbour:intersection){
-            Assertions.assertEquals(2,commonNeighbour.getMinesAround());
+        for (Cell commonNeighbour : intersection) {
+            Assertions.assertEquals(2, commonNeighbour.getMinesAround());
         }
 
-        for(Cell uniqueNeighbour:symmetricDifference){
-            Assertions.assertEquals(1,uniqueNeighbour.getMinesAround());
+        for (Cell uniqueNeighbour : symmetricDifference) {
+            Assertions.assertEquals(1, uniqueNeighbour.getMinesAround());
         }
 
     }
 
     @Test
-    @DisplayName("Validate Neighoburs Cells are correctly initialized")
-    public void validateNeighboursAreCorrectlyInitialized(){
+    @DisplayName("Check neighbours cells are correctly initialized")
+    public void validateNeighboursAreCorrectlyInitialized() {
         Board board = new Board(3, 3, 2);
         Cell cell = board.getCells()[1][1];
-        Cell [][] cells = board.getCells();
+        Cell[][] cells = board.getCells();
         List<Cell> neighbours = board.getNeighbours(cell);
-        Assertions.assertEquals(8,neighbours.size());
-        Assertions.assertEquals(cells[1][2],neighbours.get(0));
-        Assertions.assertEquals(cells[1][0],neighbours.get(1));
-        Assertions.assertEquals(cells[0][0],neighbours.get(2));
-        Assertions.assertEquals(cells[0][1],neighbours.get(3));
-        Assertions.assertEquals(cells[0][2],neighbours.get(4));
-        Assertions.assertEquals(cells[2][0],neighbours.get(5));
-        Assertions.assertEquals(cells[2][1],neighbours.get(6));
-        Assertions.assertEquals(cells[2][2],neighbours.get(7));
+        Assertions.assertEquals(8, neighbours.size());
+        Assertions.assertEquals(cells[1][2], neighbours.get(0));
+        Assertions.assertEquals(cells[1][0], neighbours.get(1));
+        Assertions.assertEquals(cells[0][0], neighbours.get(2));
+        Assertions.assertEquals(cells[0][1], neighbours.get(3));
+        Assertions.assertEquals(cells[0][2], neighbours.get(4));
+        Assertions.assertEquals(cells[2][0], neighbours.get(5));
+        Assertions.assertEquals(cells[2][1], neighbours.get(6));
+        Assertions.assertEquals(cells[2][2], neighbours.get(7));
+    }
+
+    @Test
+    @DisplayName("Flip not mine cell")
+    public void flipNotMineCell() {
+        Cell[][] cells = buildCells(5, 5);
+        int[][] minesCoordinates = {{1, 2}, {4, 4}, {3, 0}};
+        Board board = new Board(cells, minesCoordinates);
+        board.floodFlip(cells[0][0]);
+        Set<Cell> openedCells = new HashSet<>();
+        openedCells.add(cells[0][0]);
+        openedCells.add(cells[0][1]);
+        openedCells.add(cells[1][0]);
+        openedCells.add(cells[1][1]);
+        openedCells.add(cells[2][0]);
+        openedCells.add(cells[2][1]);
+        assertOpenedClosedCells(board,cells,openedCells);
+    }
+
+    @Test
+    @DisplayName("Flip mine cell")
+    public void flipMineCell() {
+        Cell[][] cells = buildCells(5, 5);
+        int[][] minesCoordinates = {{1, 2}, {4, 4}, {3, 0}};
+        Board board = new Board(cells, minesCoordinates);
+        try {
+            board.floodFlip(cells[4][4]);
+            Assertions.fail("Mines click should trigger exception");
+        } catch (IllegalStateException ex) {
+            for (Cell minesCells : board.getMines()) {
+                Assertions.assertEquals(CellState.OPENED, minesCells.getState());
+            }
+        }
+
     }
 
 
-    @Test
-    @DisplayName("Validate Flood Flip algorithm without click mines")
-    public void validateFloodFlipWithoutMines(){
-        Cell[][] cells = new Cell[5][5];
-        for(int i= 0; i<5;i++){
-            for(int j= 0; j<5;j++){
-                cells[i][j] = new Cell(i,j);
+    private void assertOpenedClosedCells(Board board, Cell[][] cells, Set<Cell> openedCells){
+        for (int i = 0; i < board.getRows(); i++) {
+            for (int j = 0; j < board.getColumns(); j++) {
+                Cell currentCell = cells[i][j];
+                if(openedCells.contains(currentCell)){
+                    Assertions.assertEquals(CellState.OPENED,currentCell.getState());
+                }else{
+                    Assertions.assertEquals(CellState.CLOSED,currentCell.getState());
+                }
             }
         }
-        cells[1][2].setMine(true);
-        cells[4][4].setMine(true);
-        cells[3][0].setMine(true);
-        int[][] minesCoordinates = {{1, 2},{4, 4},{3,0}};
-        Board board = new Board(cells,minesCoordinates);
-        board.floodFlip(cells[0][0]);
-        Assertions.assertEquals(CellState.OPENED,cells[0][0].getState());
-        Assertions.assertEquals(CellState.OPENED,cells[0][1].getState());
-        Assertions.assertEquals(CellState.OPENED,cells[1][0].getState());
-        Assertions.assertEquals(CellState.OPENED,cells[1][1].getState());
-        Assertions.assertEquals(CellState.OPENED,cells[2][0].getState());
-        Assertions.assertEquals(CellState.OPENED,cells[2][1].getState());
-        Assertions.assertEquals(CellState.CLOSED,cells[0][2].getState());
-        Assertions.assertEquals(CellState.CLOSED,cells[1][2].getState());
-        Assertions.assertEquals(CellState.CLOSED,cells[0][3].getState());
+    }
+
+
+    private Cell[][] buildCells(int row, int column) {
+        Cell[][] cells = new Cell[row][column];
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
+                cells[i][j] = new Cell(i, j);
+            }
+        }
+        return cells;
     }
 
 }
