@@ -26,6 +26,7 @@ public class GameHandlerTest {
         Board board = new Board(cells, minesCoordinates);
 
         Game game = new Game(board,"fooUserId");
+        game.setHasMadeFirstMove(true);
         GameStatus status = gameHandler.handleAction(game, new GameMove(0, 0, GameAction.FLAG));
         Assertions.assertEquals(GameStatus.PLAYING, status);
         Assertions.assertEquals(cells[0][0].getState(), CellState.FLAGGED);
@@ -49,8 +50,8 @@ public class GameHandlerTest {
         Cell cells[][] = TestUtils.buildCells(5, 5);
         int[][] minesCoordinates = {{1, 2}, {4, 4}, {3, 0}};
         Board board = new Board(cells, minesCoordinates);
-
         Game game = new Game(board,"fooUserId");
+        game.setHasMadeFirstMove(true);
         GameStatus status = gameHandler.handleAction(game, new GameMove(0, 0, GameAction.FLAG));
         Assertions.assertEquals(GameStatus.PLAYING, status);
         Assertions.assertEquals(cells[0][0].getState(), CellState.FLAGGED);
@@ -75,7 +76,7 @@ public class GameHandlerTest {
         int[][] minesCoordinates = {{1, 2}, {4, 4}, {3, 0}};
         Board board = new Board(cells, minesCoordinates);
         Game game = new Game(board,"fooUserId");
-
+        game.setHasMadeFirstMove(true);
         GameStatus status = gameHandler.handleAction(game, new GameMove(0, 0, GameAction.MARK));
         Assertions.assertEquals(GameStatus.PLAYING, status);
         Assertions.assertEquals(cells[0][0].getState(), CellState.MARKED);
@@ -100,7 +101,7 @@ public class GameHandlerTest {
         int[][] minesCoordinates = {{1, 2}, {4, 4}, {3, 0}};
         Board board = new Board(cells, minesCoordinates);
         Game game = new Game(board,"fooUserId");
-
+        game.setHasMadeFirstMove(true);
         GameStatus status = gameHandler.handleAction(game, new GameMove(0, 0, GameAction.MARK));
         Assertions.assertEquals(GameStatus.PLAYING, status);
         Assertions.assertEquals(cells[0][0].getState(), CellState.MARKED);
@@ -125,7 +126,7 @@ public class GameHandlerTest {
         int[][] minesCoordinates = {{1, 2}, {4, 4}, {3, 0}};
         Board board = new Board(cells, minesCoordinates);
         Game game = new Game(board,"fooUserId");
-
+        game.setHasMadeFirstMove(true);
         gameHandler.handleAction(game, new GameMove(0, 0, GameAction.FLAG));
         GameStatus flagRemovedStatus = gameHandler.handleAction(game, new GameMove(0, 0, GameAction.REMOVE_TAG));
         gameHandler.handleAction(game, new GameMove(2, 2, GameAction.MARK));
@@ -150,7 +151,7 @@ public class GameHandlerTest {
         int[][] minesCoordinates = {{1, 2}, {4, 4}, {3, 0}};
         Board board = new Board(cells, minesCoordinates);
         Game game = new Game(board,"fooUserId");
-
+        game.setHasMadeFirstMove(true);
         gameHandler.handleAction(game, new GameMove(0, 0, GameAction.FLIP));
         GameException gameException = Assertions.assertThrows(GameException.class, () -> {
             gameHandler.handleAction(game, new GameMove(0, 1, GameAction.REMOVE_TAG));
@@ -170,7 +171,7 @@ public class GameHandlerTest {
         int[][] minesCoordinates = {{1, 2}, {4, 4}, {3, 0}};
         Board board = new Board(cells, minesCoordinates);
         Game game = new Game(board,"fooUserId");
-
+        game.setHasMadeFirstMove(true);
         GameMove move = new GameMove(0, 0, GameAction.FLIP);
         GameStatus status = gameHandler.handleAction(game, move);
         Assertions.assertEquals(GameStatus.PLAYING, status);
@@ -187,6 +188,7 @@ public class GameHandlerTest {
         int[][] minesCoordinates = {{2, 1}};
         Board board = new Board(cells, minesCoordinates);
         Game game = new Game(board,"fooUserId");
+        game.setHasMadeFirstMove(true);
         GameStatus status = gameHandler.handleAction(game, new GameMove(0, 1, GameAction.FLIP));
         GameStatus status2 = gameHandler.handleAction(game, new GameMove(2, 0, GameAction.FLIP));
         GameStatus status3 = gameHandler.handleAction(game, new GameMove(2, 2, GameAction.FLIP));
@@ -205,6 +207,7 @@ public class GameHandlerTest {
         int[][] minesCoordinates = {{1, 1}, {2, 1}};
         Board board = new Board(cells, minesCoordinates);
         Game game = new Game(board,"fooUserId");
+        game.setHasMadeFirstMove(true);
         GameStatus status = gameHandler.handleAction(game, new GameMove(0, 1, GameAction.FLIP));
         GameStatus status2 = gameHandler.handleAction(game, new GameMove(2, 1, GameAction.FLIP));
         Assertions.assertEquals(GameStatus.PLAYING, status);
@@ -224,6 +227,7 @@ public class GameHandlerTest {
         int[][] minesCoordinates = {{1, 1}};
         Board board = new Board(cells, minesCoordinates);
         Game game = new Game(board,"fooUserId");
+        game.setHasMadeFirstMove(true);
         gameHandler.handleAction(game, new GameMove(0, 1, GameAction.FLIP));
         GameException gameException = Assertions.assertThrows(GameException.class, () -> {
             gameHandler.handleAction(game, new GameMove(0, 1, GameAction.FLIP));

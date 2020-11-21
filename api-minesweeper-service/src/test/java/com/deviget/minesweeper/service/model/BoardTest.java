@@ -14,6 +14,7 @@ public class BoardTest {
     @DisplayName("Check counters around mines cells")
     public void validateCountersAroundMines() {
         Board board = new Board(3, 3, 2);
+        board.initializeMines(0,0);
         Iterator<Cell> it = board.getMines().iterator();
         Cell mine1 = it.next();
         Cell mine2 = it.next();
@@ -43,6 +44,7 @@ public class BoardTest {
     @DisplayName("Check neighbours cells are correctly initialized")
     public void validateNeighboursAreCorrectlyInitialized() {
         Board board = new Board(3, 3, 2);
+        board.initializeMines(0,0);
         Cell cell = board.getCells()[1][1];
         Cell[][] cells = board.getCells();
         List<Cell> neighbours = board.getNeighbours(cell);

@@ -4,13 +4,21 @@ import com.deviget.minesweeper.service.model.*;
 import com.deviget.minesweeper.service.utils.ExceptionUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiFunction;
+
 @Component
 public class GameHandler {
 
     private final ExceptionUtils exceptionUtils;
+    private Map<Boolean, BiFunction<Game,Cell,GameStatus>> flipAction;
 
     public GameHandler(ExceptionUtils exceptionUtils) {
         this.exceptionUtils = exceptionUtils;
+        this.flipAction = new HashMap<>();
+        this.flipAction.put(Boolean.FALSE,(g,c)->flipActionFirstTime(g,c));
+        this.flipAction.put(Boolean.TRUE,(g,c)->flipAction(g,c));
     }
 
     public GameStatus handleAction(Game game, GameMove move) {
@@ -21,7 +29,7 @@ public class GameHandler {
             case FLAG -> flagAction(cell);
             case MARK -> markAction(cell);
             case REMOVE_TAG -> removeTagAction(cell);
-            case FLIP -> flipAction(board, cell);
+            case FLIP -> this.flipAction.get(game.hasMadeFirstMove()).apply(game,cell);
         };
         return status;
     }
@@ -58,7 +66,16 @@ public class GameHandler {
         throw exceptionUtils.buildException("game.action.general.type", "game.action.remove.tag.description", "game.action.general.status");
     }
 
-    private GameStatus flipAction(Board board, Cell cell) {
+
+    private GameStatus flipActionFirstTime(Game game, Cell cell){
+        game.getBoard().initializeMines(cell.getRow(),cell.getColumn());
+        game.setHasMadeFirstMove(true);
+        return flipAction(game,cell);
+    }
+
+
+    private GameStatus flipAction(Game game, Cell cell) {
+        Board board = game.getBoard();
         if (!cell.getState().equals(CellState.FLAGGED)
                 && !cell.getState().equals(CellState.OPENED)) {
             board.floodFlip(cell);

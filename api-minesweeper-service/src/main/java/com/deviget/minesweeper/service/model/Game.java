@@ -14,6 +14,7 @@ public class Game {
     private Instant startTime;
     private Instant lastMove;
     private int flagsAvailable;
+    private boolean hasMadeFirstMove;
     private Board board;
     private GameStatus status;
 
@@ -21,6 +22,7 @@ public class Game {
         this.board = board;
         this.userId = userId;
         this.flagsAvailable = this.board.getNumberOfMines();
+        this.hasMadeFirstMove = false;
         this.startTime = Instant.now();
         this.lastMove = Instant.now();
         this.status = GameStatus.PLAYING;
@@ -82,7 +84,11 @@ public class Game {
         this.flagsAvailable = flagsAvailable;
     }
 
+    public boolean hasMadeFirstMove() {
+        return hasMadeFirstMove;
+    }
 
-
-
+    public void setHasMadeFirstMove(boolean hasMadeFirstMove) {
+        this.hasMadeFirstMove = hasMadeFirstMove;
+    }
 }

@@ -19,7 +19,6 @@ public class Board {
         this.openedCells = 0;
         this.numberOfMines = numberOfMines;
         this.initializeBoard();
-        this.initializeMines();
     }
 
     // Constructor with testing purpose
@@ -113,14 +112,14 @@ public class Board {
         }
     }
 
-    private void initializeMines() {
+    public void initializeMines(int firstMovementRow, int firstMovementColumn) {
         int minesPlaces = 0;
         this.mines = new ArrayList<>(numberOfMines);
         while (minesPlaces < this.numberOfMines) {
             int row = (int) (Math.random() * this.rows);
             int column = (int) (Math.random() * this.columns);
             Cell currentCell = this.cells[row][column];
-            if (!currentCell.isMine()) {
+            if (!currentCell.isMine() && (row!=firstMovementRow && column!=firstMovementColumn)) {
                 this.placeMine(row,column);
                 minesPlaces++;
             }
