@@ -27,15 +27,18 @@ public class GameController {
     }
 
     @PostMapping
-    public ResponseEntity<GameDTO> startNewGame(@RequestBody StartGameDTO action) {
-        Game game = service.createNewGame(action.getRows(), action.getColumns(), action.getMines());
+    public ResponseEntity<GameDTO> startNewGame(@RequestHeader("X-UserId") String userId,
+                                                @RequestBody StartGameDTO action) {
+        Game game = service.createNewGame(action.getRows(), action.getColumns(), action.getMines(),userId);
         GameDTO gameDTO = conversionService.convert(game, GameDTO.class);
         ResponseEntity<GameDTO> responseEntity = new ResponseEntity(gameDTO, HttpStatus.CREATED);
         return responseEntity;
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<GameDTO> playGame(@PathVariable String id, @RequestBody GameMoveDTO action) {
+    public ResponseEntity<GameDTO> playGame(@RequestHeader("X-UserId") String userId,
+                                            @PathVariable String id,
+                                            @RequestBody GameMoveDTO action) {
         GameMove gameMove = conversionService.convert(action,GameMove.class);
         Game game = service.makeMove(id,gameMove);
         GameDTO gameDTO = conversionService.convert(game, GameDTO.class);

@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface GameService {
 
-    Game createNewGame(int row, int columns, int mines);
+    Game createNewGame(int row, int columns, int mines, String userId);
 
     Optional<Game> findByGameId(String id);
 
