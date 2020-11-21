@@ -7,6 +7,7 @@ public class Board {
     private int rows;
     private int columns;
     private int numberOfMines;
+    private int openedCells;
     private Cell[][] cells;
     private List<Cell> mines;
 
@@ -15,6 +16,7 @@ public class Board {
     public Board(int rows, int columns, int numberOfMines) {
         this.rows = rows;
         this.columns = columns;
+        this.openedCells = 0;
         this.numberOfMines = numberOfMines;
         this.initializeBoard();
         this.initializeMines();
@@ -62,8 +64,7 @@ public class Board {
         queue.add(cell);
         while (!queue.isEmpty()) {
             Cell currentCell = queue.remove();
-            if(!visited.contains(currentCell)){
-                visited.add(currentCell);
+            if(visited.add(currentCell)){
                 if (currentCell.isMine()) {
                     //TODO replace with correct exception management
                     flipMines();
@@ -75,6 +76,7 @@ public class Board {
         }
     }
 
+    public int getOpenedCells(){return openedCells;}
 
     public int getRows() {
         return rows;
@@ -141,15 +143,12 @@ public class Board {
 
     private void flipNeighbours(Cell cell, Queue queue) {
         List<Cell> neighbours = this.getNeighbours(cell);
+        this.openedCells++;
         cell.updateStatus(CellState.OPENED);
         if (cell.getMinesAround() == 0){
             for (Cell neighbour : neighbours) {
                 if (!neighbour.isMine()) {
-                    if (neighbour.getMinesAround() == 0) {
-                        queue.add(neighbour);
-                    }else{
-                        neighbour.updateStatus(CellState.OPENED);
-                    }
+                    queue.add(neighbour);
                 }
             }
         }

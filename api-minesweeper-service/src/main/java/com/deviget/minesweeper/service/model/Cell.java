@@ -60,14 +60,12 @@ public class Cell {
         if (!(o instanceof Cell)) return false;
         Cell cell = (Cell) o;
         return row == cell.row &&
-                column == cell.column &&
-                minesAround == cell.minesAround &&
-                mine == cell.mine &&
-                state == cell.state;
+                column == cell.column;
+
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(row, column, minesAround, mine, state);
+        return Objects.hash(row, column);
     }
 }
