@@ -10,6 +10,8 @@ public class Board {
     private Cell[][] cells;
     private List<Cell> mines;
 
+    public Board(){}
+
     public Board(int rows, int columns, int numberOfMines) {
         this.rows = rows;
         this.columns = columns;
@@ -28,25 +30,6 @@ public class Board {
         this.initializeMinesWithCoordinates(minesCoordinates);
     }
 
-    public int getRows() {
-        return rows;
-    }
-
-    public int getColumns() {
-        return columns;
-    }
-
-    public int getNumberOfMines() {
-        return numberOfMines;
-    }
-
-    public Cell[][] getCells() {
-        return cells;
-    }
-
-    public List<Cell> getMines() {
-        return mines;
-    }
 
     public List<Cell> getNeighbours(Cell cell) {
         int rowPosition = cell.getRow();
@@ -90,6 +73,27 @@ public class Board {
                 }
             }
         }
+    }
+
+
+    public int getRows() {
+        return rows;
+    }
+
+    public int getColumns() {
+        return columns;
+    }
+
+    public int getNumberOfMines() {
+        return numberOfMines;
+    }
+
+    public Cell[][] getCells() {
+        return cells;
+    }
+
+    public List<Cell> getMines() {
+        return mines;
     }
 
     private void initializeBoard() {

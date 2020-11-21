@@ -28,7 +28,7 @@ public class GameToGameDTOConverter implements Converter<Game, GameDTO> {
 
         BoardDTO boardDTO = boardToBoardDTOConverter.convert(game.getBoard());
 
-        return new GameDTO(boardDTO,status);
+        return new GameDTO(game.getId(),boardDTO,status);
 
     }
 }

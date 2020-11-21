@@ -17,9 +17,8 @@ public class Game {
     private Board board;
     private GameStatus status;
 
-    public Game(Board board, String userId){
+    public Game(Board board){
         this.board = board;
-        this.userId = userId;
         this.flagsAvailable = this.board.getNumberOfMines();
         this.startTime = Instant.now();
         this.lastMove = Instant.now();

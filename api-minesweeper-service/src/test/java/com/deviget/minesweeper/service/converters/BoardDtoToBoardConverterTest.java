@@ -19,7 +19,6 @@ public class BoardDtoToBoardConverterTest {
         Board board = new Board(3, 3, 2);
         BoardDTO boardDTO = new BoardDTO(3, 3, 2, createCells(3, 3, board.getCells()));
         BoardDTO convertedBoardDto = boardToBoardDTOConverter.convert(board);
-        Mockito.verify(cellToCellDTOConverter, Mockito.times(9));
         assertBoard(boardDTO,convertedBoardDto);
     }
 

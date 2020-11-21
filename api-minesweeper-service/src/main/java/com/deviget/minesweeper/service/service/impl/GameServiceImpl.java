@@ -6,6 +6,7 @@ import com.deviget.minesweeper.service.repository.GameRepository;
 import com.deviget.minesweeper.service.service.GameService;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -24,8 +25,7 @@ public class GameServiceImpl implements GameService {
     public Game createNewGame(int row, int columns, int mines) {
 
         Board board = new Board(row, columns, mines);
-        //TODO Replace Hardcoded user ID
-        Game game = new Game(board, UUID.randomUUID().toString());
+        Game game = new Game(board);
         Game createdGame = repository.save(game);
         return createdGame;
     }
@@ -35,5 +35,10 @@ public class GameServiceImpl implements GameService {
         Game game = repository.findById(gameId).get();
         gameHandler.handleAction(game,move);
         return repository.save(game);
+    }
+
+    @Override
+    public Optional<Game> findByGameId(String id) {
+        return repository.findById(id);
     }
 }
