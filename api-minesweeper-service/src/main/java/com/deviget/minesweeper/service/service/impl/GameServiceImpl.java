@@ -1,13 +1,15 @@
 package com.deviget.minesweeper.service.service.impl;
 
 import com.deviget.minesweeper.service.handler.GameHandler;
-import com.deviget.minesweeper.service.model.*;
+import com.deviget.minesweeper.service.model.Board;
+import com.deviget.minesweeper.service.model.Game;
+import com.deviget.minesweeper.service.model.GameMove;
+import com.deviget.minesweeper.service.model.GameStatus;
 import com.deviget.minesweeper.service.repository.GameRepository;
 import com.deviget.minesweeper.service.service.GameService;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class GameServiceImpl implements GameService {
@@ -33,7 +35,8 @@ public class GameServiceImpl implements GameService {
     @Override
     public Game makeMove(String gameId, GameMove move) {
         Game game = repository.findById(gameId).get();
-        gameHandler.handleAction(game,move);
+        GameStatus status = gameHandler.handleAction(game,move);
+        game.setStatus(status);
         return repository.save(game);
     }
 

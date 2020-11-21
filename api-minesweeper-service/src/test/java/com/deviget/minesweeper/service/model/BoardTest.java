@@ -95,8 +95,9 @@ public class BoardTest {
         int[][] minesCoordinates = {{1, 2}, {4, 4}, {3, 0}};
         Board board = new Board(cells, minesCoordinates);
         board.floodFlip(cells[4][4]);
-        for (Cell minesCells : board.getMines()) {
-                Assertions.assertEquals(CellState.OPENED, minesCells.getState());
+        for (Cell minesCell : board.getMines()) {
+                Assertions.assertEquals(CellState.OPENED, minesCell.getState());
+                Assertions.assertEquals(CellState.OPENED,cells[minesCell.getRow()][minesCell.getColumn()].getState());
         }
     }
 

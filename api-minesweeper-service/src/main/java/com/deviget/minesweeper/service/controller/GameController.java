@@ -2,8 +2,10 @@
 package com.deviget.minesweeper.service.controller;
 
 import com.deviget.minesweeper.api.GameDTO;
-import com.deviget.minesweeper.api.StartGameAction;
+import com.deviget.minesweeper.api.GameMoveDTO;
+import com.deviget.minesweeper.api.StartGameDTO;
 import com.deviget.minesweeper.service.model.Game;
+import com.deviget.minesweeper.service.model.GameMove;
 import com.deviget.minesweeper.service.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.support.DefaultConversionService;
@@ -25,10 +27,19 @@ public class GameController {
     }
 
     @PostMapping
-    public ResponseEntity<GameDTO> startNewGame(@RequestBody StartGameAction action) {
+    public ResponseEntity<GameDTO> startNewGame(@RequestBody StartGameDTO action) {
         Game game = service.createNewGame(action.getRows(), action.getColumns(), action.getMines());
         GameDTO gameDTO = conversionService.convert(game, GameDTO.class);
         ResponseEntity<GameDTO> responseEntity = new ResponseEntity(gameDTO, HttpStatus.CREATED);
+        return responseEntity;
+    }
+
+    @PatchMapping("{id}")
+    public ResponseEntity<GameDTO> playGame(@PathVariable String id, @RequestBody GameMoveDTO action) {
+        GameMove gameMove = conversionService.convert(action,GameMove.class);
+        Game game = service.makeMove(id,gameMove);
+        GameDTO gameDTO = conversionService.convert(game, GameDTO.class);
+        ResponseEntity<GameDTO> responseEntity = new ResponseEntity(gameDTO, HttpStatus.OK);
         return responseEntity;
     }
 

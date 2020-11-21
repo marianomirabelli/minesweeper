@@ -3,13 +3,13 @@ package com.deviget.minesweeper.api;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class StartGameAction implements Serializable {
+public class StartGameDTO implements Serializable {
 
     private int rows;
     private int columns;
     private int mines;
 
-    public StartGameAction(){}
+    public StartGameDTO(){}
 
     public int getRows() {
         return rows;
@@ -38,8 +38,8 @@ public class StartGameAction implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof StartGameAction)) return false;
-        StartGameAction that = (StartGameAction) o;
+        if (!(o instanceof StartGameDTO)) return false;
+        StartGameDTO that = (StartGameDTO) o;
         return rows == that.rows &&
                 columns == that.columns &&
                 mines == that.mines;
