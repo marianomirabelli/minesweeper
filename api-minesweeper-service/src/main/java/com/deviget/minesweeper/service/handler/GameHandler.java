@@ -20,6 +20,7 @@ public class GameHandler {
         GameStatus status = switch (move.getAction()) {
             case FLAG -> flagAction(cell);
             case MARK -> markAction(cell);
+            case REMOVE_TAG -> removeTagAction(cell);
             case FLIP -> flipAction(board, cell);
         };
         return status;
@@ -45,6 +46,16 @@ public class GameHandler {
 
         }
         throw exceptionUtils.buildException("game.action.general.type", "game.action.mark.description", "game.action.general.status");
+    }
+
+    private GameStatus removeTagAction(Cell cell){
+        if (cell.getState().equals(CellState.FLAGGED)
+            || cell.getState().equals(CellState.MARKED)){
+
+            cell.updateStatus(CellState.CLOSED);
+            return GameStatus.PLAYING;
+        }
+        throw exceptionUtils.buildException("game.action.general.type", "game.action.remove.tag.description", "game.action.general.status");
     }
 
     private GameStatus flipAction(Board board, Cell cell) {
