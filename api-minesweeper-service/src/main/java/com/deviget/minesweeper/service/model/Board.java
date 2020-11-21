@@ -62,13 +62,13 @@ public class Board {
         Queue<Cell> queue = new LinkedList();
         Set<Cell> visited = new HashSet<>();
         queue.add(cell);
-        while (!queue.isEmpty()) {
+        boolean mineNotFound = true;
+        while (!queue.isEmpty() && mineNotFound) {
             Cell currentCell = queue.remove();
             if(visited.add(currentCell)){
                 if (currentCell.isMine()) {
-                    //TODO replace with correct exception management
                     flipMines();
-                    throw new IllegalStateException("Mine detected");
+                    mineNotFound = false;
                 } else {
                     flipNeighbours(currentCell,queue);
                 }

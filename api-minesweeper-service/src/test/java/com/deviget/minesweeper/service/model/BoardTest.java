@@ -1,5 +1,6 @@
 package com.deviget.minesweeper.service.model;
 
+import com.deviget.minesweeper.service.utils.TestUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -59,7 +60,7 @@ public class BoardTest {
     @Test
     @DisplayName("Flip not mine cell")
     public void flipNotMineCell() {
-        Cell[][] cells = buildCells(5, 5);
+        Cell[][] cells = TestUtils.buildCells(5, 5);
         int[][] minesCoordinates = {{1, 2}, {4, 4}, {3, 0}};
         Board board = new Board(cells, minesCoordinates);
         board.floodFlip(cells[0][0]);
@@ -70,24 +71,33 @@ public class BoardTest {
         openedCells.add(cells[1][1]);
         openedCells.add(cells[2][0]);
         openedCells.add(cells[2][1]);
+        Assertions.assertEquals(6,board.getOpenedCells());
+        assertOpenedClosedCells(board,cells,openedCells);
+    }
+
+    @Test
+    @DisplayName("Flip not mine numbered cell")
+    public void flipNotMineNumberedCell() {
+        Cell[][] cells = TestUtils.buildCells(5, 5);
+        int[][] minesCoordinates = {{1, 2}, {4, 4}, {3, 0}};
+        Board board = new Board(cells, minesCoordinates);
+        board.floodFlip(cells[1][3]);
+        Set<Cell> openedCells = new HashSet<>();
+        openedCells.add(cells[1][3]);
+        Assertions.assertEquals(1,board.getOpenedCells());
         assertOpenedClosedCells(board,cells,openedCells);
     }
 
     @Test
     @DisplayName("Flip mine cell")
     public void flipMineCell() {
-        Cell[][] cells = buildCells(5, 5);
+        Cell[][] cells = TestUtils.buildCells(5, 5);
         int[][] minesCoordinates = {{1, 2}, {4, 4}, {3, 0}};
         Board board = new Board(cells, minesCoordinates);
-        try {
-            board.floodFlip(cells[4][4]);
-            Assertions.fail("Mines click should trigger exception");
-        } catch (IllegalStateException ex) {
-            for (Cell minesCells : board.getMines()) {
+        board.floodFlip(cells[4][4]);
+        for (Cell minesCells : board.getMines()) {
                 Assertions.assertEquals(CellState.OPENED, minesCells.getState());
-            }
         }
-
     }
 
 
@@ -105,14 +115,6 @@ public class BoardTest {
     }
 
 
-    private Cell[][] buildCells(int row, int column) {
-        Cell[][] cells = new Cell[row][column];
-        for (int i = 0; i < row; i++) {
-            for (int j = 0; j < column; j++) {
-                cells[i][j] = new Cell(i, j);
-            }
-        }
-        return cells;
-    }
+
 
 }
