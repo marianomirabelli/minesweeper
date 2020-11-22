@@ -1,5 +1,7 @@
 package com.deviget.minesweeper.service.model;
 
+import java.util.Objects;
+
 public class GameMove {
 
     private int row;
@@ -34,5 +36,20 @@ public class GameMove {
 
     public void setAction(GameAction action) {
         this.action = action;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof GameMove)) return false;
+        GameMove gameMove = (GameMove) o;
+        return row == gameMove.row &&
+                column == gameMove.column &&
+                action == gameMove.action;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(row, column, action);
     }
 }

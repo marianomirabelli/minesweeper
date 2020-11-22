@@ -43,7 +43,7 @@ public class GameHandlerTest {
     public void handleFlagActionThrowException() throws IOException {
 
         final String TYPE = "ACTION_NOT_ALLOWED";
-        final String DETAIL = "Closed or marked cells can be flagged";
+        final String DETAIL = "Only closed or marked cells can be flagged";
         final int STATUS = 406;
 
         GameHandler gameHandler = initHandler("game.action.flag.description");
@@ -93,7 +93,7 @@ public class GameHandlerTest {
     public void handleMarkActionThrowsException() throws IOException {
 
         final String TYPE = "ACTION_NOT_ALLOWED";
-        final String DETAIL = "Closed or flagged cells can be marked";
+        final String DETAIL = "Only closed or flagged cells can be marked";
         final int STATUS = 406;
 
         GameHandler gameHandler = initHandler("game.action.mark.description");
@@ -143,7 +143,7 @@ public class GameHandlerTest {
     public void handleRemoveFlagThrowException() throws IOException {
 
         final String TYPE = "ACTION_NOT_ALLOWED";
-        final String DETAIL = "Marked or flagged cells can be targeted";
+        final String DETAIL = "Only marked or flagged cells can be targeted";
         final int STATUS = 406;
 
         GameHandler gameHandler = initHandler("game.action.remove.tag.description");
@@ -220,7 +220,7 @@ public class GameHandlerTest {
     public void handleFlipActionThrowException() throws IOException {
 
         final String TYPE = "ACTION_NOT_ALLOWED";
-        final String DETAIL = "Closed or marked cells can be flipped";
+        final String DETAIL = "Only closed or marked cells can be flipped";
         final int STATUS = 406;
 
         GameHandler gameHandler = initHandler("game.action.flip.description");

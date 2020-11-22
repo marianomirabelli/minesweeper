@@ -6,6 +6,8 @@ public class GameException extends RuntimeException {
     private String detail;
     private int status;
 
+    public GameException(){}
+
     public GameException(String type, String detail, int status){
         super(detail);
         this.type = type;

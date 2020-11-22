@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("game")
+@RequestMapping("/game")
 public class GameController {
 
     private final GameService service;

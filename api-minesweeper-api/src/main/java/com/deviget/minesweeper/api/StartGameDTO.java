@@ -11,6 +11,12 @@ public class StartGameDTO implements Serializable {
 
     public StartGameDTO(){}
 
+    public StartGameDTO(int rows, int columns, int mines) {
+        this.rows = rows;
+        this.columns = columns;
+        this.mines = mines;
+    }
+
     public int getRows() {
         return rows;
     }

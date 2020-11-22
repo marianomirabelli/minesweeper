@@ -1,7 +1,6 @@
 package com.deviget.minesweeper.service.handler;
 
 import com.deviget.minesweeper.service.model.*;
-import com.deviget.minesweeper.service.utils.ExceptionUtils;
 import com.deviget.minesweeper.service.validator.GameValidator;
 import org.springframework.stereotype.Component;
 

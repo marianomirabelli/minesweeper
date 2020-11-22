@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.time.Instant;
+
 public class GameDtoToGameConverterTest {
 
     private BoardToBoardDTOConverter boardToBoardDTOConverter = Mockito.mock(BoardToBoardDTOConverter.class);
@@ -18,12 +20,13 @@ public class GameDtoToGameConverterTest {
     public void covertGameToGameDto(){
         BoardDTO expectedBoardDTO = Mockito.mock(BoardDTO.class);
         Board board = Mockito.mock(Board.class);
-        GameDTO expectedGameDto = new GameDTO("fooId",expectedBoardDTO, GameStatusDTO.PLAYING);
-        Game game = new Game(board,"fooId");
-        game.setId("fooId");
+        Game game = new Game(board,"fooUserId");
+        GameDTO expectedGameDto = new GameDTO("gameId","fooUserId",expectedBoardDTO, 0, game.getStartTime(),
+                                              game.getLastMove(),GameStatusDTO.PLAYING);
+        game.setId("gameId");
         Mockito.when(boardToBoardDTOConverter.convert(board)).thenReturn(expectedBoardDTO);
         GameDTO actualGameDto = gameToGameDTOConverter.convert(game);
-        Mockito.verify(boardToBoardDTOConverter.convert(board),Mockito.times(1));
+        Mockito.verify(boardToBoardDTOConverter,Mockito.times(1)).convert(board);
         Assertions.assertEquals(expectedGameDto,actualGameDto);
     }
 }

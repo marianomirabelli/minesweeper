@@ -1,19 +1,29 @@
 package com.deviget.minesweeper.api;
 
+import java.time.Instant;
 import java.util.Objects;
 
 public class GameDTO {
 
     private String id;
     private BoardDTO board;
+    private Instant startTime;
+    private Instant lastMove;
+    private int cellsFlagged;
+    private String userId;
     private GameStatusDTO status;
 
-    public GameDTO(){}
+    public GameDTO() {
+    }
 
-    public GameDTO(String id, BoardDTO board, GameStatusDTO status){
+    public GameDTO(String id,String userId, BoardDTO board,int cellsFlagged ,Instant startTime, Instant lastMove, GameStatusDTO status) {
         this.id = id;
+        this.userId = userId;
         this.board = board;
+        this.cellsFlagged = cellsFlagged;
         this.status = status;
+        this.startTime = startTime;
+        this.lastMove = lastMove;
     }
 
     public BoardDTO getBoard() {
@@ -40,19 +50,47 @@ public class GameDTO {
         this.id = id;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public Instant getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Instant startTime) {
+        this.startTime = startTime;
+    }
+
+    public Instant getLastMove() {
+        return lastMove;
+    }
+
+    public void setLastMove(Instant lastMove) {
+        this.lastMove = lastMove;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof GameDTO)) return false;
         GameDTO gameDTO = (GameDTO) o;
-        return Objects.equals(id, gameDTO.id) &&
+        return cellsFlagged == gameDTO.cellsFlagged &&
+                Objects.equals(id, gameDTO.id) &&
                 Objects.equals(board, gameDTO.board) &&
+                Objects.equals(startTime, gameDTO.startTime) &&
+                Objects.equals(lastMove, gameDTO.lastMove) &&
+                Objects.equals(userId, gameDTO.userId) &&
                 status == gameDTO.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, board, status);
+        return Objects.hash(id, board, startTime, lastMove, cellsFlagged, userId, status);
     }
 
     @Override
@@ -60,6 +98,10 @@ public class GameDTO {
         final StringBuilder sb = new StringBuilder("GameDTO{");
         sb.append("id='").append(id).append('\'');
         sb.append(", board=").append(board);
+        sb.append(", startTime=").append(startTime);
+        sb.append(", lastMove=").append(lastMove);
+        sb.append(", cellsFlagged=").append(cellsFlagged);
+        sb.append(", userId='").append(userId).append('\'');
         sb.append(", status=").append(status);
         sb.append('}');
         return sb.toString();

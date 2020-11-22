@@ -10,7 +10,7 @@ public class ApiErrorDTO {
 
     public ApiErrorDTO(){}
 
-    public ApiErrorDTO(String type, String details, int status) {
+    public ApiErrorDTO(String type, String details,int status) {
         this.type = type;
         this.details = details;
         this.status = status;
