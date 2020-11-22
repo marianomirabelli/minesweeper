@@ -7,6 +7,8 @@ import com.deviget.minesweeper.api.StartGameDTO;
 import com.deviget.minesweeper.service.model.Game;
 import com.deviget.minesweeper.service.model.GameMove;
 import com.deviget.minesweeper.service.service.GameService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/game")
+@Api(value="/game",tags={"Game Controller"})
 public class GameController {
 
     private final GameService service;
@@ -26,6 +29,7 @@ public class GameController {
         this.conversionService = conversionService;
     }
 
+    @ApiOperation(value = "startNewGame" ,notes = "Creates a new game",response = GameDTO.class)
     @PostMapping
     public ResponseEntity<GameDTO> startNewGame(@RequestHeader("X-UserId") String userId,
                                                 @RequestBody StartGameDTO action) {
@@ -35,6 +39,7 @@ public class GameController {
         return responseEntity;
     }
 
+    @ApiOperation(value = "doAction" ,notes = "Execute an action in the game",response = GameDTO.class)
     @PatchMapping("{id}")
     public ResponseEntity<GameDTO> playGame(@RequestHeader("X-UserId") String userId,
                                             @PathVariable String id,
@@ -46,6 +51,7 @@ public class GameController {
         return responseEntity;
     }
 
+    @ApiOperation(value = "retrieveGame" ,notes = "Retrieves a game by id",response = GameDTO.class)
     @GetMapping("{id}")
     public ResponseEntity<GameDTO> getGameById(@PathVariable String id) {
         ResponseEntity responseEntity = service.findByGameId(id).map(g -> {
