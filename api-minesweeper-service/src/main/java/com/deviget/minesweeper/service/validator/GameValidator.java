@@ -21,7 +21,7 @@ public class GameValidator {
         if (game.getStatus().equals(GameStatus.LOST) ||
                 game.getStatus().equals(GameStatus.WON)) {
             throw exceptionUtils
-                    .buildException("game.playable.type", "game.playable.description ", "game.playable.status");
+                    .buildException("game.playable.type", "game.playable.description", "game.playable.status");
         }
     }
 

@@ -145,4 +145,32 @@ public class GameControllerTest {
 
     }
 
+    @Test
+    public void userDoesNotExist() throws Exception {
+        final String type = "NON_EXISTENT_USER";
+        final String detail = "The username does not exists";
+        final int code = 401;
+
+        GameMoveDTO gameMoveDTO = new GameMoveDTO(3, 3, GameActionDTO.FLAG);
+        ApiErrorDTO apiErrorDTO = new ApiErrorDTO(type,detail,code);
+        GameMove gameMove = new GameMove(3,3, GameAction.FLAG);
+        MinesweeperException minesWeeperException = new MinesweeperException(type,detail,code);
+
+        String serializedDto = objectMapper.writeValueAsString(gameMoveDTO);
+        Cookie cookie = new Cookie("userName","fooUser");
+        Mockito.doThrow(minesWeeperException).when(gameService).makeMove("fooId",gameMove,"fooUser");
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.patch("/game/fooId")
+                .contentType(MediaType.APPLICATION_JSON)
+                .cookie(cookie)
+                .content(serializedDto))
+                .andExpect(MockMvcResultMatchers.status().is(HttpStatus.UNAUTHORIZED.value()))
+                .andReturn();
+
+        ApiErrorDTO apiErrorObtained = objectMapper.readValue(result.getResponse().getContentAsString(),ApiErrorDTO.class);
+        Mockito.verify(gameService,Mockito.times(1)).makeMove("fooId",gameMove,"fooUser");
+        Assertions.assertEquals(apiErrorDTO,apiErrorObtained);
+
+    }
+
 }
