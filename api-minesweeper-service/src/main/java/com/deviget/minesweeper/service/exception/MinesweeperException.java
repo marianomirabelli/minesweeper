@@ -1,14 +1,14 @@
 package com.deviget.minesweeper.service.exception;
 
-public class GameException extends RuntimeException {
+public class MinesweeperException extends RuntimeException {
 
     private String type;
     private String detail;
     private int status;
 
-    public GameException(){}
+    public MinesweeperException(){}
 
-    public GameException(String type, String detail, int status){
+    public MinesweeperException(String type, String detail, int status){
         super(detail);
         this.type = type;
         this.detail = detail;

@@ -7,7 +7,7 @@ import com.deviget.minesweeper.service.converters.BoardToBoardDTOConverter;
 import com.deviget.minesweeper.service.converters.CellToCellDTOConverter;
 import com.deviget.minesweeper.service.converters.GameMoveDTOToGameMoveConverter;
 import com.deviget.minesweeper.service.converters.GameToGameDTOConverter;
-import com.deviget.minesweeper.service.exception.GameException;
+import com.deviget.minesweeper.service.exception.MinesweeperException;
 import com.deviget.minesweeper.service.model.*;
 import com.deviget.minesweeper.service.service.GameService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,6 +25,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+import javax.servlet.http.Cookie;
 
 @SpringBootTest(classes = {WebConfiguration.class, ConvertersConfiguration.class,
                             GameToGameDTOConverter.class, BoardToBoardDTOConverter.class,
@@ -48,18 +50,18 @@ public class GameControllerTest {
         StartGameDTO startGameDTO = new StartGameDTO(3, 3, 2);
         Game game = new Game(Mockito.mock(Board.class),"fooUserId");
         String serializedDto = objectMapper.writeValueAsString(startGameDTO);
-
-        Mockito.when(gameService.createNewGame(3, 3, 2, "fooUserId")).thenReturn(game);
+        Cookie cookie = new Cookie("userName","fooUser");
+        Mockito.when(gameService.createNewGame(3, 3, 2, "fooUser")).thenReturn(game);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/game")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-UserId", "fooUserId")
+                .cookie(cookie)
                 .content(serializedDto))
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.CREATED.value()))
                 .andReturn();
 
         GameDTO gameDTO = objectMapper.readValue(result.getResponse().getContentAsString(),GameDTO.class);
-        Mockito.verify(gameService,Mockito.times(1)).createNewGame(3,3,2,"fooUserId");
+        Mockito.verify(gameService,Mockito.times(1)).createNewGame(3,3,2,"fooUser");
         Assertions.assertEquals("fooUserId",gameDTO.getUserId());
         Assertions.assertEquals(GameStatusDTO.PLAYING,gameDTO.getStatus());
 
@@ -74,20 +76,20 @@ public class GameControllerTest {
         GameMoveDTO gameMoveDTO = new GameMoveDTO(3, 3, GameActionDTO.FLAG);
         ApiErrorDTO apiErrorDTO = new ApiErrorDTO(type,detail,code);
         GameMove gameMove = new GameMove(3,3, GameAction.FLAG);
-        GameException gameException = new GameException(type,detail,code);
+        MinesweeperException minesWeeperException = new MinesweeperException(type,detail,code);
         String serializedDto = objectMapper.writeValueAsString(gameMoveDTO);
-
-        Mockito.doThrow(gameException).when(gameService).makeMove("fooId",gameMove);
+        Cookie cookie = new Cookie("userName","fooUser");
+        Mockito.doThrow(minesWeeperException).when(gameService).makeMove("fooId",gameMove,"fooUser");
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.patch("/game/fooId")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-UserId", "fooUserId")
+                .cookie(cookie)
                 .content(serializedDto))
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.NOT_FOUND.value()))
                 .andReturn();
 
         ApiErrorDTO apiErrorObtained = objectMapper.readValue(result.getResponse().getContentAsString(),ApiErrorDTO.class);
-        Mockito.verify(gameService,Mockito.times(1)).makeMove("fooId",gameMove);
+        Mockito.verify(gameService,Mockito.times(1)).makeMove("fooId",gameMove,"fooUser");
         Assertions.assertEquals(apiErrorDTO,apiErrorObtained);
 
     }
@@ -98,18 +100,18 @@ public class GameControllerTest {
         Game game = new Game(Mockito.mock(Board.class),"fooUserId");
         GameMove gameMove = new GameMove(3,3, GameAction.FLAG);
         String serializedDto = objectMapper.writeValueAsString(gameMoveDTO);
-
-        Mockito.when(gameService.makeMove("fooId",gameMove)).thenReturn(game);
+        Cookie cookie = new Cookie("userName","fooUser");
+        Mockito.when(gameService.makeMove("fooId",gameMove,"fooUser")).thenReturn(game);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.patch("/game/fooId")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-UserId", "fooUserId")
+                .cookie(cookie)
                 .content(serializedDto))
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
                 .andReturn();
 
         GameDTO gameDTO = objectMapper.readValue(result.getResponse().getContentAsString(),GameDTO.class);
-        Mockito.verify(gameService,Mockito.times(1)).makeMove("fooId",gameMove);
+        Mockito.verify(gameService,Mockito.times(1)).makeMove("fooId",gameMove,"fooUser");
         Assertions.assertEquals("fooUserId",gameDTO.getUserId());
         Assertions.assertEquals(GameStatusDTO.PLAYING,gameDTO.getStatus());
 
@@ -125,20 +127,20 @@ public class GameControllerTest {
         GameMoveDTO gameMoveDTO = new GameMoveDTO(3, 3, GameActionDTO.FLAG);
         ApiErrorDTO apiErrorDTO = new ApiErrorDTO(type,detail,code);
         GameMove gameMove = new GameMove(3,3, GameAction.FLAG);
-        GameException gameException = new GameException(type,detail,code);
+        MinesweeperException minesWeeperException = new MinesweeperException(type,detail,code);
         String serializedDto = objectMapper.writeValueAsString(gameMoveDTO);
-
-        Mockito.doThrow(gameException).when(gameService).makeMove("fooId",gameMove);
+        Cookie cookie = new Cookie("userName","fooUser");
+        Mockito.doThrow(minesWeeperException).when(gameService).makeMove("fooId",gameMove,"fooUser");
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.patch("/game/fooId")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-UserId", "fooUserId")
+                .cookie(cookie)
                 .content(serializedDto))
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.NOT_ACCEPTABLE.value()))
                 .andReturn();
 
         ApiErrorDTO apiErrorObtained = objectMapper.readValue(result.getResponse().getContentAsString(),ApiErrorDTO.class);
-        Mockito.verify(gameService,Mockito.times(1)).makeMove("fooId",gameMove);
+        Mockito.verify(gameService,Mockito.times(1)).makeMove("fooId",gameMove,"fooUser");
         Assertions.assertEquals(apiErrorDTO,apiErrorObtained);
 
     }

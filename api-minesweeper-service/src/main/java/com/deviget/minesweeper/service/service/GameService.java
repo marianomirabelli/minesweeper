@@ -7,9 +7,9 @@ import java.util.Optional;
 
 public interface GameService {
 
-    Game createNewGame(int row, int columns, int mines, String userId);
+    Game createNewGame(int row, int columns, int mines, String userName);
 
     Optional<Game> findByGameId(String id);
 
-    Game makeMove(String gameId,GameMove movement);
+    Game makeMove(String gameId,GameMove movement, String userName);
 }

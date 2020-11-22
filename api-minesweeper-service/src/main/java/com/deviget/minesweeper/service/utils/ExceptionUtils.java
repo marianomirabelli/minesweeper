@@ -1,6 +1,6 @@
 package com.deviget.minesweeper.service.utils;
 
-import com.deviget.minesweeper.service.exception.GameException;
+import com.deviget.minesweeper.service.exception.MinesweeperException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -18,11 +18,11 @@ public class ExceptionUtils {
     }
 
 
-    public GameException buildException(String typeKey, String descriptionKey,String statusKey){
+    public MinesweeperException buildException(String typeKey, String descriptionKey,String statusKey){
         String type = environment.getProperty(typeKey);
         String description = environment.getProperty(descriptionKey);
         int status = Integer.parseInt(environment.getProperty(statusKey));
-        return new GameException(type,description,status);
+        return new MinesweeperException(type,description,status);
     }
 
 }

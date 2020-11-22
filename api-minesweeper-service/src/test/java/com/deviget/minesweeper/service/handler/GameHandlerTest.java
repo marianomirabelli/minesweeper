@@ -1,6 +1,6 @@
 package com.deviget.minesweeper.service.handler;
 
-import com.deviget.minesweeper.service.exception.GameException;
+import com.deviget.minesweeper.service.exception.MinesweeperException;
 import com.deviget.minesweeper.service.model.*;
 import com.deviget.minesweeper.service.utils.ExceptionUtils;
 import com.deviget.minesweeper.service.utils.TestUtils;
@@ -87,7 +87,7 @@ public class GameHandlerTest {
         final int STATUS = 406;
 
         GameValidator gameValidator = Mockito.mock(GameValidator.class);
-        Mockito.doThrow(new GameException(TYPE,DETAIL,STATUS))
+        Mockito.doThrow(new MinesweeperException(TYPE,DETAIL,STATUS))
                 .when(gameValidator)
                 .checkIfRemoveTagActionIsAllowed(Mockito.any(Cell.class));
 
@@ -99,7 +99,7 @@ public class GameHandlerTest {
         Game game = new Game(board,"fooUserId");
         game.setHasMadeFirstMove(true);
         gameHandler.handleAction(game, new GameMove(0, 0, GameAction.FLIP));
-        GameException gameException = Assertions.assertThrows(GameException.class, () -> {
+        MinesweeperException minesWeeperException = Assertions.assertThrows(MinesweeperException.class, () -> {
             gameHandler.handleAction(game, new GameMove(0, 1, GameAction.REMOVE_TAG));
         });
 
