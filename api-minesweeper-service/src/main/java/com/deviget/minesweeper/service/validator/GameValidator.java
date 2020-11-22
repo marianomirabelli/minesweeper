@@ -1,9 +1,6 @@
 package com.deviget.minesweeper.service.validator;
 
-import com.deviget.minesweeper.service.model.Board;
-import com.deviget.minesweeper.service.model.Game;
-import com.deviget.minesweeper.service.model.GameMove;
-import com.deviget.minesweeper.service.model.GameStatus;
+import com.deviget.minesweeper.service.model.*;
 import com.deviget.minesweeper.service.utils.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,8 +25,8 @@ public class GameValidator {
     }
 
     public Game checkIfGameExists(Optional<Game> opGame) {
-       return opGame.orElseThrow(()->
-               exceptionUtils.buildException("game.not.found.type", "game.not.found.description", "game.not.found.status"));
+        return opGame.orElseThrow(() ->
+                exceptionUtils.buildException("game.not.found.type", "game.not.found.description", "game.not.found.status"));
     }
 
     public void checkIfItIsAValidCoordinate(GameMove move, Board board) {
@@ -47,7 +44,34 @@ public class GameValidator {
         if (mines > minesPercentage) {
             throw exceptionUtils.buildException("game.mines.exceeded.type", "game.mines.exceeded.description", "game.mines.exceeded.status");
         }
+    }
 
+    public void checkIfFlagActionIsAllowed(Cell cell) {
+        if (cell.getState().equals(CellState.FLAGGED)
+                || cell.getState().equals(CellState.OPENED)) {
+            throw exceptionUtils.buildException("game.action.general.type", "game.action.flag.description", "game.action.general.status");
+        }
+    }
+
+    public void checkIfMarkActionIsAllowed(Cell cell) {
+        if (cell.getState().equals(CellState.MARKED)
+                || cell.getState().equals(CellState.OPENED)) {
+            throw exceptionUtils.buildException("game.action.general.type", "game.action.mark.description", "game.action.general.status");
+        }
+    }
+
+    public void checkIfRemoveTagActionIsAllowed(Cell cell) {
+        if (!cell.getState().equals(CellState.FLAGGED)
+                && !cell.getState().equals(CellState.MARKED)) {
+            throw exceptionUtils.buildException("game.action.general.type", "game.action.remove.tag.description", "game.action.general.status");
+        }
+    }
+
+    public void checkIfFlipActionIsAllowed(Cell cell) {
+        if (cell.getState().equals(CellState.FLAGGED)
+                || cell.getState().equals(CellState.OPENED)) {
+            throw exceptionUtils.buildException("game.action.general.type", "game.action.flip.description", "game.action.general.status");
+        }
     }
 
 }

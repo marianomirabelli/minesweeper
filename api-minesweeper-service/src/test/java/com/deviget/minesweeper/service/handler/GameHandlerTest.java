@@ -4,6 +4,7 @@ import com.deviget.minesweeper.service.exception.GameException;
 import com.deviget.minesweeper.service.model.*;
 import com.deviget.minesweeper.service.utils.ExceptionUtils;
 import com.deviget.minesweeper.service.utils.TestUtils;
+import com.deviget.minesweeper.service.validator.GameValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ public class GameHandlerTest {
     @DisplayName("Flag cell successfully")
     public void handleFlagActionSuccessFully() {
 
-        GameHandler gameHandler = new GameHandler(Mockito.mock(ExceptionUtils.class));
+        GameHandler gameHandler = new GameHandler(new GameValidator(Mockito.mock(ExceptionUtils.class)));
 
         Cell cells[][] = TestUtils.buildCells(5, 5);
         int[][] minesCoordinates = {{1, 2}, {4, 4}, {3, 0}};
@@ -70,7 +71,7 @@ public class GameHandlerTest {
     @DisplayName("Mark cell successfully")
     public void handleMarkActionSuccessfully() {
 
-        GameHandler gameHandler = new GameHandler(Mockito.mock(ExceptionUtils.class));
+        GameHandler gameHandler = new GameHandler(new GameValidator(Mockito.mock(ExceptionUtils.class)));
 
         Cell cells[][] = TestUtils.buildCells(5, 5);
         int[][] minesCoordinates = {{1, 2}, {4, 4}, {3, 0}};
@@ -120,7 +121,7 @@ public class GameHandlerTest {
     @DisplayName("Remove flag and mark successfully")
     public void handleRemoveFlagAndMarkSuccessfully() {
 
-        GameHandler gameHandler = new GameHandler(Mockito.mock(ExceptionUtils.class));
+        GameHandler gameHandler = new GameHandler(new GameValidator(Mockito.mock(ExceptionUtils.class)));
 
         Cell cells[][] = TestUtils.buildCells(5, 5);
         int[][] minesCoordinates = {{1, 2}, {4, 4}, {3, 0}};
@@ -165,7 +166,7 @@ public class GameHandlerTest {
     @DisplayName("Keep playing")
     public void handleFlipActionKeepPlaying() {
 
-        GameHandler gameHandler = new GameHandler(Mockito.mock(ExceptionUtils.class));
+        GameHandler gameHandler = new GameHandler(new GameValidator(Mockito.mock(ExceptionUtils.class)));
 
         Cell cells[][] = TestUtils.buildCells(5, 5);
         int[][] minesCoordinates = {{1, 2}, {4, 4}, {3, 0}};
@@ -183,7 +184,7 @@ public class GameHandlerTest {
     @DisplayName("Win game")
     public void handleFlipActionWinGame() {
 
-        GameHandler gameHandler = new GameHandler(Mockito.mock(ExceptionUtils.class));
+        GameHandler gameHandler = new GameHandler(new GameValidator(Mockito.mock(ExceptionUtils.class)));
         Cell cells[][] = TestUtils.buildCells(3, 3);
         int[][] minesCoordinates = {{2, 1}};
         Board board = new Board(cells, minesCoordinates);
@@ -202,7 +203,7 @@ public class GameHandlerTest {
     @DisplayName("Lost game")
     public void handleFlipActionLostGame() {
 
-        GameHandler gameHandler = new GameHandler(Mockito.mock(ExceptionUtils.class));
+        GameHandler gameHandler = new GameHandler(new GameValidator(Mockito.mock(ExceptionUtils.class)));
         Cell cells[][] = TestUtils.buildCells(3, 3);
         int[][] minesCoordinates = {{1, 1}, {2, 1}};
         Board board = new Board(cells, minesCoordinates);
@@ -258,7 +259,7 @@ public class GameHandlerTest {
                             properties.getProperty(keyDetail),
                             Integer.parseInt(properties.getProperty("game.action.general.status"))));
 
-        return new GameHandler(exceptionUtils);
+        return new GameHandler(new GameValidator(exceptionUtils));
     }
 
 

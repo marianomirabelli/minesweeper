@@ -2,6 +2,7 @@ package com.deviget.minesweeper.service.handler;
 
 import com.deviget.minesweeper.service.model.*;
 import com.deviget.minesweeper.service.utils.ExceptionUtils;
+import com.deviget.minesweeper.service.validator.GameValidator;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -11,14 +12,14 @@ import java.util.function.BiFunction;
 @Component
 public class GameHandler {
 
-    private final ExceptionUtils exceptionUtils;
-    private Map<Boolean, BiFunction<Game,Cell,GameStatus>> flipAction;
+    private final GameValidator validator;
+    private final Map<Boolean, BiFunction<Game, Cell, GameStatus>> flipAction;
 
-    public GameHandler(ExceptionUtils exceptionUtils) {
-        this.exceptionUtils = exceptionUtils;
+    public GameHandler(GameValidator validator) {
+        this.validator = validator;
         this.flipAction = new HashMap<>();
-        this.flipAction.put(Boolean.FALSE,(g,c)->flipActionFirstTime(g,c));
-        this.flipAction.put(Boolean.TRUE,(g,c)->flipAction(g,c));
+        this.flipAction.put(Boolean.FALSE, (g, c) -> flipActionFirstTime(g, c));
+        this.flipAction.put(Boolean.TRUE, (g, c) -> flipAction(g, c));
     }
 
     public GameStatus handleAction(Game game, GameMove move) {
@@ -29,70 +30,53 @@ public class GameHandler {
             case FLAG -> flagAction(cell);
             case MARK -> markAction(cell);
             case REMOVE_TAG -> removeTagAction(cell);
-            case FLIP -> this.flipAction.get(game.hasMadeFirstMove()).apply(game,cell);
+            case FLIP -> this.flipAction.get(game.hasMadeFirstMove()).apply(game, cell);
         };
         return status;
     }
 
     private GameStatus flagAction(Cell cell) {
-        if (!cell.getState().equals(CellState.FLAGGED)
-                && !cell.getState().equals(CellState.OPENED)) {
-
-            cell.updateStatus(CellState.FLAGGED);
-            return GameStatus.PLAYING;
-
-        }
-        throw exceptionUtils.buildException("game.action.general.type", "game.action.flag.description", "game.action.general.status");
+        validator.checkIfFlagActionIsAllowed(cell);
+        cell.updateStatus(CellState.FLAGGED);
+        return GameStatus.PLAYING;
     }
 
     private GameStatus markAction(Cell cell) {
-        if (!cell.getState().equals(CellState.MARKED)
-                && !cell.getState().equals(CellState.OPENED)) {
-
-            cell.updateStatus(CellState.MARKED);
-            return GameStatus.PLAYING;
-
-        }
-        throw exceptionUtils.buildException("game.action.general.type", "game.action.mark.description", "game.action.general.status");
+        validator.checkIfMarkActionIsAllowed(cell);
+        cell.updateStatus(CellState.MARKED);
+        return GameStatus.PLAYING;
     }
 
-    private GameStatus removeTagAction(Cell cell){
-        if (cell.getState().equals(CellState.FLAGGED)
-            || cell.getState().equals(CellState.MARKED)){
-
-            cell.updateStatus(CellState.CLOSED);
-            return GameStatus.PLAYING;
-        }
-        throw exceptionUtils.buildException("game.action.general.type", "game.action.remove.tag.description", "game.action.general.status");
+    private GameStatus removeTagAction(Cell cell) {
+        validator.checkIfRemoveTagActionIsAllowed(cell);
+        cell.updateStatus(CellState.CLOSED);
+        return GameStatus.PLAYING;
     }
 
 
-    private GameStatus flipActionFirstTime(Game game, Cell cell){
-        game.getBoard().initializeMines(cell.getRow(),cell.getColumn());
+    private GameStatus flipActionFirstTime(Game game, Cell cell) {
+        game.getBoard().initializeMines(cell.getRow(), cell.getColumn());
         game.setHasMadeFirstMove(true);
-        return flipAction(game,cell);
+        return flipAction(game, cell);
     }
 
 
     private GameStatus flipAction(Game game, Cell cell) {
+        validator.checkIfFlipActionIsAllowed(cell);
         Board board = game.getBoard();
-        if (!cell.getState().equals(CellState.FLAGGED)
-                && !cell.getState().equals(CellState.OPENED)) {
-            board.floodFlip(cell);
-            boolean mineFound = board.getMines().get(0).getState().equals(CellState.OPENED);
-            if (mineFound) {
-                return GameStatus.LOST;
-            }
-            int totalCells = board.getRows() * board.getColumns();
-            int openedCells = board.getOpenedCells();
-            int mines = board.getNumberOfMines();
-            if (Math.addExact(openedCells, mines) == totalCells) {
-                return GameStatus.WON;
-            } else {
-                return GameStatus.PLAYING;
-            }
+        board.floodFlip(cell);
+        boolean mineFound = board.getMines().get(0).getState().equals(CellState.OPENED);
+        if (mineFound) {
+            return GameStatus.LOST;
         }
-        throw exceptionUtils.buildException("game.action.general.type", "game.action.flip.description", "game.action.general.status");
+        int totalCells = board.getRows() * board.getColumns();
+        int openedCells = board.getOpenedCells();
+        int mines = board.getNumberOfMines();
+        if (Math.addExact(openedCells, mines) == totalCells) {
+            return GameStatus.WON;
+        } else {
+            return GameStatus.PLAYING;
+        }
     }
 
 
