@@ -10,7 +10,7 @@ public class UserDTO {
     public UserDTO() {}
 
     public UserDTO(String id, String userName) {
-        this.userName = id;
+        this.id = id;
         this.userName = userName;
     }
 

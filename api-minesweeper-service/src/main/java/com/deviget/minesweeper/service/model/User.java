@@ -1,6 +1,7 @@
 package com.deviget.minesweeper.service.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Objects;
@@ -9,7 +10,7 @@ import java.util.Objects;
 public class User {
     @Id
     private String id;
-
+    @Indexed(unique = true)
     private String userName;
 
     public User(){}

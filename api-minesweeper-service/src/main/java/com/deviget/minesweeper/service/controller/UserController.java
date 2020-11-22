@@ -8,12 +8,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
-@RestController("/users")
+@RestController
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
@@ -26,7 +28,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO, HttpServletResponse response){
         User user = new User(userDTO.getUserName());
-        userService.createNewUser(user);
+        user = userService.createNewUser(user);
         Cookie cookie = new Cookie("userName",user.getUserName());
         cookie.setMaxAge(7 * 24 * 60 * 60);
         response.addCookie(cookie);

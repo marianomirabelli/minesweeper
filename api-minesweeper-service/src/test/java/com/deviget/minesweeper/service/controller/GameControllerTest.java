@@ -53,7 +53,7 @@ public class GameControllerTest {
         Cookie cookie = new Cookie("userName","fooUser");
         Mockito.when(gameService.createNewGame(3, 3, 2, "fooUser")).thenReturn(game);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/game")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/games")
                 .contentType(MediaType.APPLICATION_JSON)
                 .cookie(cookie)
                 .content(serializedDto))
@@ -81,7 +81,7 @@ public class GameControllerTest {
         Cookie cookie = new Cookie("userName","fooUser");
         Mockito.doThrow(minesWeeperException).when(gameService).makeMove("fooId",gameMove,"fooUser");
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.patch("/game/fooId")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.patch("/games/fooId")
                 .contentType(MediaType.APPLICATION_JSON)
                 .cookie(cookie)
                 .content(serializedDto))
@@ -103,7 +103,7 @@ public class GameControllerTest {
         Cookie cookie = new Cookie("userName","fooUser");
         Mockito.when(gameService.makeMove("fooId",gameMove,"fooUser")).thenReturn(game);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.patch("/game/fooId")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.patch("/games/fooId")
                 .contentType(MediaType.APPLICATION_JSON)
                 .cookie(cookie)
                 .content(serializedDto))
@@ -132,7 +132,7 @@ public class GameControllerTest {
         Cookie cookie = new Cookie("userName","fooUser");
         Mockito.doThrow(minesWeeperException).when(gameService).makeMove("fooId",gameMove,"fooUser");
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.patch("/game/fooId")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.patch("/games/fooId")
                 .contentType(MediaType.APPLICATION_JSON)
                 .cookie(cookie)
                 .content(serializedDto))
@@ -160,7 +160,7 @@ public class GameControllerTest {
         Cookie cookie = new Cookie("userName","fooUser");
         Mockito.doThrow(minesWeeperException).when(gameService).makeMove("fooId",gameMove,"fooUser");
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.patch("/game/fooId")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.patch("/games/fooId")
                 .contentType(MediaType.APPLICATION_JSON)
                 .cookie(cookie)
                 .content(serializedDto))

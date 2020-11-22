@@ -7,7 +7,6 @@ import com.deviget.minesweeper.service.repository.GameRepository;
 import com.deviget.minesweeper.service.repository.UserRepository;
 import com.deviget.minesweeper.service.service.impl.GameServiceImpl;
 import com.deviget.minesweeper.service.utils.TestUtils;
-import com.fasterxml.jackson.databind.deser.std.UUIDDeserializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -247,14 +246,6 @@ public class GameServiceTest {
         for (Cell cell : cells) {
             Assertions.assertEquals(cellState, cell.getState());
         }
-    }
-
-    private static List<Cell> convertToCollection(Cell[][] cells) {
-        List<Cell> list = new ArrayList<Cell>();
-        for (Cell[] array : cells) {
-            list.addAll(Arrays.asList(array));
-        }
-        return list;
     }
 
 }

@@ -37,4 +37,10 @@ public class GameControllerAdvisor extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(apiErrorDTO,this.statusCodeMap.get(apiErrorDTO.getStatus()));
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiErrorDTO> handleExceptions(Exception ex, WebRequest request) {
+        ApiErrorDTO apiErrorDTO = new ApiErrorDTO("UNEXPECTED_ERROR", ex.getMessage(), 500);
+        return new ResponseEntity<>(apiErrorDTO,this.statusCodeMap.get(apiErrorDTO.getStatus()));
+    }
+
 }

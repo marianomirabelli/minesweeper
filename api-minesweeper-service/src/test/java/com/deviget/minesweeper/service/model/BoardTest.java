@@ -1,6 +1,7 @@
 package com.deviget.minesweeper.service.model;
 
 import com.deviget.minesweeper.service.utils.TestUtils;
+import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ public class BoardTest {
     @DisplayName("Check counters around mines cells")
     public void validateCountersAroundMines() {
         Board board = new Board(3, 3, 2);
-        board.initializeMines(0,0);
+        board.initializeMines(0, 0);
         Iterator<Cell> it = board.getMines().iterator();
         Cell mine1 = it.next();
         Cell mine2 = it.next();
@@ -44,7 +45,7 @@ public class BoardTest {
     @DisplayName("Check neighbours cells are correctly initialized")
     public void validateNeighboursAreCorrectlyInitialized() {
         Board board = new Board(3, 3, 2);
-        board.initializeMines(0,0);
+        board.initializeMines(0, 0);
         Cell cell = board.getCells()[1][1];
         Cell[][] cells = board.getCells();
         List<Cell> neighbours = board.getNeighbours(cell);
@@ -63,7 +64,7 @@ public class BoardTest {
     @DisplayName("Flip not mine cell")
     public void flipNotMineCell() {
         Cell[][] cells = TestUtils.buildCells(5, 5);
-        int[][] minesCoordinates = {{1, 2}, {4, 4}, {3, 0}};
+        int[][] minesCoordinates = { { 1, 2 }, { 4, 4 }, { 3, 0 } };
         Board board = new Board(cells, minesCoordinates);
         board.floodFlip(cells[0][0]);
         Set<Cell> openedCells = new HashSet<>();
@@ -73,51 +74,60 @@ public class BoardTest {
         openedCells.add(cells[1][1]);
         openedCells.add(cells[2][0]);
         openedCells.add(cells[2][1]);
-        Assertions.assertEquals(6,board.getOpenedCells());
-        assertOpenedClosedCells(board,cells,openedCells);
+        Assertions.assertEquals(6, board.getOpenedCells());
+        assertOpenedClosedCells(board, cells, openedCells);
     }
 
     @Test
     @DisplayName("Flip not mine numbered cell")
     public void flipNotMineNumberedCell() {
         Cell[][] cells = TestUtils.buildCells(5, 5);
-        int[][] minesCoordinates = {{1, 2}, {4, 4}, {3, 0}};
+        int[][] minesCoordinates = { { 1, 2 }, { 4, 4 }, { 3, 0 } };
         Board board = new Board(cells, minesCoordinates);
         board.floodFlip(cells[1][3]);
         Set<Cell> openedCells = new HashSet<>();
         openedCells.add(cells[1][3]);
-        Assertions.assertEquals(1,board.getOpenedCells());
-        assertOpenedClosedCells(board,cells,openedCells);
+        Assertions.assertEquals(1, board.getOpenedCells());
+        assertOpenedClosedCells(board, cells, openedCells);
     }
 
     @Test
     @DisplayName("Flip mine cell")
     public void flipMineCell() {
         Cell[][] cells = TestUtils.buildCells(5, 5);
-        int[][] minesCoordinates = {{1, 2}, {4, 4}, {3, 0}};
+        int[][] minesCoordinates = { { 1, 2 }, { 4, 4 }, { 3, 0 } };
         Board board = new Board(cells, minesCoordinates);
+        List<Cell> mines = board.getMines();
         board.floodFlip(cells[4][4]);
-        for (Cell minesCell : board.getMines()) {
-                Assertions.assertEquals(CellState.OPENED, minesCell.getState());
-                Assertions.assertEquals(CellState.OPENED,cells[minesCell.getRow()][minesCell.getColumn()].getState());
+        for (Cell[] currentCells : cells) {
+            for (Cell cell : currentCells) {
+                if (cell.isMine()) {
+                    Assertions.assertTrue(mines.contains(cell));
+                    Cell mineCell = mines.stream()
+                            .filter(c -> (c.getRow() == cell.getRow()
+                                          && c.getColumn() == cell.getColumn())).findFirst().get();
+                    Assertions.assertEquals(CellState.OPENED, mineCell.getState());
+                    Assertions.assertEquals(CellState.OPENED, cells[cell.getRow()][cell.getColumn()].getState());
+                } else {
+                    Assert.assertFalse(mines.contains(cell));
+                    Assertions.assertEquals(CellState.CLOSED, cells[cell.getRow()][cell.getColumn()].getState());
+                }
+            }
         }
+
     }
 
-
-    private void assertOpenedClosedCells(Board board, Cell[][] cells, Set<Cell> openedCells){
+    private void assertOpenedClosedCells(Board board, Cell[][] cells, Set<Cell> openedCells) {
         for (int i = 0; i < board.getRows(); i++) {
             for (int j = 0; j < board.getColumns(); j++) {
                 Cell currentCell = cells[i][j];
-                if(openedCells.contains(currentCell)){
-                    Assertions.assertEquals(CellState.OPENED,currentCell.getState());
-                }else{
-                    Assertions.assertEquals(CellState.CLOSED,currentCell.getState());
+                if (openedCells.contains(currentCell)) {
+                    Assertions.assertEquals(CellState.OPENED, currentCell.getState());
+                } else {
+                    Assertions.assertEquals(CellState.CLOSED, currentCell.getState());
                 }
             }
         }
     }
-
-
-
 
 }

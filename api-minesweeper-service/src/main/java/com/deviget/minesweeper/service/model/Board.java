@@ -141,7 +141,7 @@ public class Board {
         List<Cell> mines = this.getMines();
         for (Cell mineCell : mines) {
             mineCell.updateStatus(CellState.OPENED);
-            this.cells[mineCell.getRow()][mineCell.getRow()].updateStatus(CellState.OPENED);
+            this.cells[mineCell.getRow()][mineCell.getColumn()].updateStatus(CellState.OPENED);
         }
     }
 
