@@ -66,6 +66,33 @@ public class GameControllerTest {
     }
 
     @Test
+    public void makeMovementWhenGameDoesNotExist() throws Exception {
+        final String type = "GAME_NOT_FOUND";
+        final String detail = "The chosen game does not exist";
+        final int code = 404;
+
+        GameMoveDTO gameMoveDTO = new GameMoveDTO(3, 3, GameActionDTO.FLAG);
+        ApiErrorDTO apiErrorDTO = new ApiErrorDTO(type,detail,code);
+        GameMove gameMove = new GameMove(3,3, GameAction.FLAG);
+        GameException gameException = new GameException(type,detail,code);
+        String serializedDto = objectMapper.writeValueAsString(gameMoveDTO);
+
+        Mockito.doThrow(gameException).when(gameService).makeMove("fooId",gameMove);
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.patch("/game/fooId")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("X-UserId", "fooUserId")
+                .content(serializedDto))
+                .andExpect(MockMvcResultMatchers.status().is(HttpStatus.NOT_FOUND.value()))
+                .andReturn();
+
+        ApiErrorDTO apiErrorObtained = objectMapper.readValue(result.getResponse().getContentAsString(),ApiErrorDTO.class);
+        Mockito.verify(gameService,Mockito.times(1)).makeMove("fooId",gameMove);
+        Assertions.assertEquals(apiErrorDTO,apiErrorObtained);
+
+    }
+
+    @Test
     public void flagCellSuccessFully() throws Exception {
         GameMoveDTO gameMoveDTO = new GameMoveDTO(3, 3, GameActionDTO.FLAG);
         Game game = new Game(Mockito.mock(Board.class),"fooUserId");
@@ -92,7 +119,7 @@ public class GameControllerTest {
     @Test
     public void flagCellWithErrorFully() throws Exception {
         final String type = "ACTION_NOT_ALLOWED";
-        final String detail = "Closed or marked cells can be flagged";
+        final String detail = "Only closed or marked cells can be flagged";
         final int code = 406;
 
         GameMoveDTO gameMoveDTO = new GameMoveDTO(3, 3, GameActionDTO.FLAG);

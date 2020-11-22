@@ -9,8 +9,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.time.Instant;
-
 public class GameDtoToGameConverterTest {
 
     private BoardToBoardDTOConverter boardToBoardDTOConverter = Mockito.mock(BoardToBoardDTOConverter.class);
