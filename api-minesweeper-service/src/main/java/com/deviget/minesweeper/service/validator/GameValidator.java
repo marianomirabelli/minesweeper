@@ -46,8 +46,8 @@ public class GameValidator {
     public void checkIfItIsAValidCoordinate(GameMove move, Board board) {
         int row = move.getRow();
         int column = move.getColumn();
-        if ((row <= 0 || row >= board.getRows()) ||
-                (column <= 0 || column >= board.getColumns())) {
+        if ((row < 0 || row >= board.getRows()) ||
+                (column < 0 || column >= board.getColumns())) {
             throw exceptionUtils
                     .buildException("game.coordinates.type", "game.coordinates.description", "game.coordinates.status");
         }
@@ -59,6 +59,10 @@ public class GameValidator {
         if (mines > minesPercentage) {
             throw exceptionUtils.buildException("game.mines.exceeded.type", "game.mines.exceeded.description",
                     "game.mines.exceeded.status");
+        }
+        if((rows < 3 || columns <3) || (rows>30 || columns>30)){
+            throw exceptionUtils.buildException("game.row.columns.type", "game.row.columns.description",
+                    "game.row.columns.status");
         }
     }
 

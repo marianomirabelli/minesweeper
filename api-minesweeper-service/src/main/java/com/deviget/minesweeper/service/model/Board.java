@@ -11,18 +11,20 @@ public class Board {
     private Cell[][] cells;
     private List<Cell> mines;
 
-    public Board(){}
+    public Board() {
+    }
 
     public Board(int rows, int columns, int numberOfMines) {
         this.rows = rows;
         this.columns = columns;
         this.openedCells = 0;
         this.numberOfMines = numberOfMines;
+        this.mines = new ArrayList<>(numberOfMines);
         this.initializeBoard();
     }
 
     // Constructor with testing purpose
-    public Board(Cell[][] cells, int[][] minesCoordinates){
+    public Board(Cell[][] cells, int[][] minesCoordinates) {
         this.cells = cells;
         this.rows = cells.length;
         this.columns = cells[0].length;
@@ -31,19 +33,18 @@ public class Board {
         this.initializeMinesWithCoordinates(minesCoordinates);
     }
 
-
     public List<Cell> getNeighbours(Cell cell) {
         int rowPosition = cell.getRow();
         int columnPosition = cell.getColumn();
 
-        int[][] neighbourCoordinates = {{rowPosition, columnPosition + 1},
-                {rowPosition, columnPosition - 1},
-                {rowPosition - 1, columnPosition - 1},
-                {rowPosition - 1, columnPosition},
-                {rowPosition - 1, columnPosition + 1},
-                {rowPosition + 1, columnPosition - 1},
-                {rowPosition + 1, columnPosition},
-                {rowPosition + 1, columnPosition + 1}};
+        int[][] neighbourCoordinates = { { rowPosition, columnPosition + 1 },
+                { rowPosition, columnPosition - 1 },
+                { rowPosition - 1, columnPosition - 1 },
+                { rowPosition - 1, columnPosition },
+                { rowPosition - 1, columnPosition + 1 },
+                { rowPosition + 1, columnPosition - 1 },
+                { rowPosition + 1, columnPosition },
+                { rowPosition + 1, columnPosition + 1 } };
 
         final List<Cell> neighboursCells = new ArrayList<>();
 
@@ -56,26 +57,27 @@ public class Board {
         return neighboursCells;
     }
 
-
-    public void floodFlip(Cell cell){
+    public void floodFlip(Cell cell) {
         Queue<Cell> queue = new LinkedList();
         Set<Cell> visited = new HashSet<>();
         queue.add(cell);
         boolean mineNotFound = true;
         while (!queue.isEmpty() && mineNotFound) {
             Cell currentCell = queue.remove();
-            if(visited.add(currentCell)){
+            if (visited.add(currentCell)) {
                 if (currentCell.isMine()) {
                     flipMines();
                     mineNotFound = false;
                 } else {
-                    flipNeighbours(currentCell,queue);
+                    flipNeighbours(currentCell, queue);
                 }
             }
         }
     }
 
-    public int getOpenedCells(){return openedCells;}
+    public int getOpenedCells() {
+        return openedCells;
+    }
 
     public int getRows() {
         return rows;
@@ -99,16 +101,16 @@ public class Board {
 
     private void initializeBoard() {
         this.cells = new Cell[rows][columns];
-        for(int i = 0 ; i< this.rows; i++){
-            for(int j = 0 ; j<this.columns; j++){
-                this.cells[i][j] = new Cell(i,j);
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.columns; j++) {
+                this.cells[i][j] = new Cell(i, j);
             }
         }
     }
 
-    private void initializeMinesWithCoordinates(int[][] coordinates){
-        for(int [] coordinate:coordinates ){
-            this.placeMine(coordinate[0],coordinate[1]);
+    private void initializeMinesWithCoordinates(int[][] coordinates) {
+        for (int[] coordinate : coordinates) {
+            this.placeMine(coordinate[0], coordinate[1]);
         }
     }
 
@@ -119,21 +121,23 @@ public class Board {
             int row = (int) (Math.random() * this.rows);
             int column = (int) (Math.random() * this.columns);
             Cell currentCell = this.cells[row][column];
-            if (!currentCell.isMine() && (row!=firstMovementRow && column!=firstMovementColumn)) {
-                this.placeMine(row,column);
+            if (!currentCell.isMine()
+                 && (row != firstMovementRow && column != firstMovementColumn)
+                 && (!currentCell.getState().equals(CellState.OPENED))) {
+                this.placeMine(row, column);
                 minesPlaces++;
             }
         }
     }
 
-    private void placeMine(int row, int column){
+    private void placeMine(int row, int column) {
         this.cells[row][column].setMine(true);
         this.getNeighbours(this.cells[row][column])
                 .stream().filter(c -> !c.isMine()).forEach(cell -> cell.incrementMinesAround());
         this.mines.add(this.cells[row][column]);
     }
 
-    private  void flipMines() {
+    private void flipMines() {
         List<Cell> mines = this.getMines();
         for (Cell mineCell : mines) {
             mineCell.updateStatus(CellState.OPENED);
@@ -145,7 +149,7 @@ public class Board {
         List<Cell> neighbours = this.getNeighbours(cell);
         this.openedCells++;
         cell.updateStatus(CellState.OPENED);
-        if (cell.getMinesAround() == 0){
+        if (cell.getMinesAround() == 0) {
             for (Cell neighbour : neighbours) {
                 if (!neighbour.isMine()) {
                     queue.add(neighbour);
@@ -154,4 +158,22 @@ public class Board {
         }
     }
 
+    @Override public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof Board))
+            return false;
+        Board board = (Board) o;
+        return rows == board.rows &&
+                columns == board.columns &&
+                numberOfMines == board.numberOfMines &&
+                Arrays.equals(cells, board.cells) &&
+                Objects.equals(mines, board.mines);
+    }
+
+    @Override public int hashCode() {
+        int result = Objects.hash(rows, columns, numberOfMines, openedCells, mines);
+        result = 31 * result + Arrays.hashCode(cells);
+        return result;
+    }
 }

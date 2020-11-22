@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
+import java.util.Objects;
 
 @Document
 public class Game {
@@ -17,6 +18,8 @@ public class Game {
     private boolean hasMadeFirstMove;
     private Board board;
     private GameStatus status;
+
+    public Game(){};
 
     public Game(Board board, String userId){
         this.board = board;
@@ -90,5 +93,21 @@ public class Game {
 
     public void setHasMadeFirstMove(boolean hasMadeFirstMove) {
         this.hasMadeFirstMove = hasMadeFirstMove;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof Game))
+            return false;
+        Game game = (Game) o;
+        return  Objects.equals(id, game.id) &&
+                Objects.equals(userId, game.userId);
+
+    }
+
+    @Override public int hashCode() {
+        return Objects.hash(id, userId);
     }
 }

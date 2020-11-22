@@ -6,6 +6,7 @@ import com.deviget.minesweeper.service.repository.GameRepository;
 import com.deviget.minesweeper.service.repository.UserRepository;
 import com.deviget.minesweeper.service.service.GameService;
 import com.deviget.minesweeper.service.validator.GameValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -19,6 +20,7 @@ public class GameServiceImpl implements GameService {
     private final GameValidator gameValidator;
     private final UserRepository userRepository;
 
+    @Autowired
     public GameServiceImpl(GameRepository repository, GameHandler gameHandler,
                             GameValidator gameValidator, UserRepository userRepository) {
         this.repository = repository;

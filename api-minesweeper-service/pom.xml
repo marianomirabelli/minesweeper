@@ -20,6 +20,7 @@
         <junit.version>5.7.0</junit.version>
         <mockito.version>3.6.0</mockito.version>
         <swagger.version>3.0.0</swagger.version>
+        <flapdoodle.embed.mongo.versiion>2.2.0</flapdoodle.embed.mongo.versiion>
         <api-minesweeper-api.version>0.0.1-SNAPSHOT</api-minesweeper-api.version>
     </properties>
 
@@ -92,6 +93,13 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>de.flapdoodle.embed</groupId>
+            <artifactId>de.flapdoodle.embed.mongo</artifactId>
+            <version>${flapdoodle.embed.mongo.versiion}</version>
             <scope>test</scope>
         </dependency>
 

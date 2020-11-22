@@ -20,7 +20,7 @@ public class GameValidatorTest {
         MinesweeperException expectedException = new MinesweeperException("OPERATION_NOT_ALLOWED",
                 "The game has finished", 406);
         Mockito.when(game.getStatus()).thenReturn(GameStatus.WON);
-        Mockito.when(exceptionUtils.buildException("game.playable.type", "game.playable.description ",
+        Mockito.when(exceptionUtils.buildException("game.playable.type", "game.playable.description",
                 "game.playable.status")).thenReturn(expectedException);
         MinesweeperException exceptionThrown = Assertions.assertThrows(MinesweeperException.class,
                 () -> gameValidator.checkIfGameIsPlayable(game));
