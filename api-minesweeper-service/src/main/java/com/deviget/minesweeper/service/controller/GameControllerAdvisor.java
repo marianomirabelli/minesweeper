@@ -2,6 +2,8 @@ package com.deviget.minesweeper.service.controller;
 
 import com.deviget.minesweeper.api.ApiErrorDTO;
 import com.deviget.minesweeper.service.exception.MinesweeperException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -23,6 +25,8 @@ public class GameControllerAdvisor extends ResponseEntityExceptionHandler {
 
     private Map<Integer, HttpStatus> statusCodeMap;
 
+    Logger logger = LoggerFactory.getLogger(GameControllerAdvisor.class);
+
     @Autowired
     public GameControllerAdvisor(){
         this.statusCodeMap =Arrays.stream(HttpStatus.values())
@@ -40,6 +44,7 @@ public class GameControllerAdvisor extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorDTO> handleExceptions(Exception ex, WebRequest request) {
         ApiErrorDTO apiErrorDTO = new ApiErrorDTO("UNEXPECTED_ERROR", ex.getMessage(), 500);
+        logger.error("Unexpected error",ex);
         return new ResponseEntity<>(apiErrorDTO,this.statusCodeMap.get(apiErrorDTO.getStatus()));
     }
 

@@ -6,6 +6,8 @@ import com.deviget.minesweeper.service.repository.GameRepository;
 import com.deviget.minesweeper.service.repository.UserRepository;
 import com.deviget.minesweeper.service.service.GameService;
 import com.deviget.minesweeper.service.validator.GameValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,8 @@ public class GameServiceImpl implements GameService {
     private final GameValidator gameValidator;
     private final UserRepository userRepository;
 
+    Logger logger = LoggerFactory.getLogger(GameServiceImpl.class);
+
     @Autowired
     public GameServiceImpl(GameRepository repository, GameHandler gameHandler,
                             GameValidator gameValidator, UserRepository userRepository) {
@@ -31,6 +35,7 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Game createNewGame(int row, int columns, int mines, String userName) {
+        logger.info("Creating new game for user {}",userName);
         User user = gameValidator.checkIfUserExists(userRepository.findByUserName(userName));
         gameValidator.checkIfGameCanBeCreated(row, columns, mines);
         Board board = new Board(row, columns, mines);

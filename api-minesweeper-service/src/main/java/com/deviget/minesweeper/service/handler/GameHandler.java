@@ -2,6 +2,8 @@ package com.deviget.minesweeper.service.handler;
 
 import com.deviget.minesweeper.service.model.*;
 import com.deviget.minesweeper.service.validator.GameValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -13,6 +15,7 @@ public class GameHandler {
 
     private final GameValidator validator;
     private final Map<Boolean, BiFunction<Game, Cell, GameStatus>> flipAction;
+    Logger logger = LoggerFactory.getLogger(GameHandler.class);
 
     public GameHandler(GameValidator validator) {
         this.validator = validator;
@@ -36,18 +39,21 @@ public class GameHandler {
 
     private GameStatus flagAction(Cell cell) {
         validator.checkIfFlagActionIsAllowed(cell);
+        logger.info("Flagging cell {}{}",cell.getRow(),cell.getColumn());
         cell.updateStatus(CellState.FLAGGED);
         return GameStatus.PLAYING;
     }
 
     private GameStatus markAction(Cell cell) {
         validator.checkIfMarkActionIsAllowed(cell);
+        logger.info("Marking cell {}{}",cell.getRow(),cell.getColumn());
         cell.updateStatus(CellState.MARKED);
         return GameStatus.PLAYING;
     }
 
     private GameStatus removeTagAction(Cell cell) {
         validator.checkIfRemoveTagActionIsAllowed(cell);
+        logger.info("Cleaning marks from cell {}{}",cell.getRow(),cell.getColumn());
         cell.updateStatus(CellState.CLOSED);
         return GameStatus.PLAYING;
     }
@@ -56,6 +62,7 @@ public class GameHandler {
     private GameStatus flipActionFirstTime(Game game, Cell cell) {
         game.getBoard().initializeMines(cell.getRow(), cell.getColumn());
         game.setHasMadeFirstMove(true);
+        logger.info("The first movement was made in the cell {}{}",cell.getRow(),cell.getColumn());
         return flipAction(game, cell);
     }
 
@@ -66,12 +73,14 @@ public class GameHandler {
         board.floodFlip(cell);
         boolean mineFound = board.getMines().get(0).getState().equals(CellState.OPENED);
         if (mineFound) {
+            logger.info("User {} has lost",game.getUserId());
             return GameStatus.LOST;
         }
         int totalCells = board.getRows() * board.getColumns();
         int openedCells = board.getOpenedCells();
         int mines = board.getNumberOfMines();
         if (Math.addExact(openedCells, mines) == totalCells) {
+            logger.info("User {} has won",game.getUserId());
             return GameStatus.WON;
         } else {
             return GameStatus.PLAYING;

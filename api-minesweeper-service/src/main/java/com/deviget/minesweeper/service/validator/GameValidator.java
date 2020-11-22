@@ -2,6 +2,8 @@ package com.deviget.minesweeper.service.validator;
 
 import com.deviget.minesweeper.service.model.*;
 import com.deviget.minesweeper.service.utils.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +14,8 @@ public class GameValidator {
 
     private final ExceptionUtils exceptionUtils;
 
+    Logger logger = LoggerFactory.getLogger(GameValidator.class);
+
     @Autowired
     public GameValidator(ExceptionUtils exceptionUtils) {
         this.exceptionUtils = exceptionUtils;
@@ -20,13 +24,15 @@ public class GameValidator {
     public void checkIfGameIsPlayable(Game game) {
         if (game.getStatus().equals(GameStatus.LOST) ||
                 game.getStatus().equals(GameStatus.WON)) {
+            logger.warn("The game {} is in {} state and is not playable anymore",game.getId(),game.getStatus());
             throw exceptionUtils
                     .buildException("game.playable.type", "game.playable.description", "game.playable.status");
         }
     }
 
     public User checkIfUserExists(Optional<User> user) {
-        return user.orElseThrow(() -> exceptionUtils
+        return user.orElseThrow(() ->
+                exceptionUtils
                 .buildException("user.not.existent.type", "user.not.existent.description","user.not.existent.status"));
     }
 
@@ -38,6 +44,7 @@ public class GameValidator {
 
     public void checkIfGameAndUserMatches(Game game, User user) {
         if(!game.getUserId().equals(user.getId())){
+            logger.warn("The game {} does not allow to user {}",game.getId(),user.getId());
             throw exceptionUtils
                     .buildException("user.game.not.match.type", "user.game.not.match.description", "user.game.not.match.status");
         }
@@ -48,6 +55,7 @@ public class GameValidator {
         int column = move.getColumn();
         if ((row < 0 || row >= board.getRows()) ||
                 (column < 0 || column >= board.getColumns())) {
+            logger.warn("{} {} coordinate is not valid",row,column);
             throw exceptionUtils
                     .buildException("game.coordinates.type", "game.coordinates.description", "game.coordinates.status");
         }
@@ -56,11 +64,13 @@ public class GameValidator {
     public void checkIfGameCanBeCreated(int rows, int columns, int mines) {
         int squares = rows * columns;
         int minesPercentage = (int) Math.ceil(squares * 0.20);
-        if (mines > minesPercentage) {
+        if (mines<=0 || mines > minesPercentage) {
+            logger.warn("{} number of mines is out of range",mines);
             throw exceptionUtils.buildException("game.mines.exceeded.type", "game.mines.exceeded.description",
                     "game.mines.exceeded.status");
         }
         if((rows < 3 || columns <3) || (rows>30 || columns>30)){
+            logger.warn("{} {} board size is out of allowed range",rows,columns);
             throw exceptionUtils.buildException("game.row.columns.type", "game.row.columns.description",
                     "game.row.columns.status");
         }
@@ -69,6 +79,7 @@ public class GameValidator {
     public void checkIfFlagActionIsAllowed(Cell cell) {
         if (cell.getState().equals(CellState.FLAGGED)
                 || cell.getState().equals(CellState.OPENED)) {
+            logger.warn("Flag action is not allowed at cell {} {}",cell.getRow(),cell.getColumn());
             throw exceptionUtils.buildException("game.action.general.type", "game.action.flag.description",
                     "game.action.general.status");
         }
@@ -77,6 +88,7 @@ public class GameValidator {
     public void checkIfMarkActionIsAllowed(Cell cell) {
         if (cell.getState().equals(CellState.MARKED)
                 || cell.getState().equals(CellState.OPENED)) {
+            logger.warn("Mark action is not allowed at cell {} {}",cell.getRow(),cell.getColumn());
             throw exceptionUtils.buildException("game.action.general.type", "game.action.mark.description",
                     "game.action.general.status");
         }
@@ -85,6 +97,7 @@ public class GameValidator {
     public void checkIfRemoveTagActionIsAllowed(Cell cell) {
         if (!cell.getState().equals(CellState.FLAGGED)
                 && !cell.getState().equals(CellState.MARKED)) {
+            logger.warn("Remove tags action is not allowed at cell {} {}",cell.getRow(),cell.getColumn());
             throw exceptionUtils.buildException("game.action.general.type", "game.action.remove.tag.description",
                     "game.action.general.status");
         }
@@ -93,6 +106,7 @@ public class GameValidator {
     public void checkIfFlipActionIsAllowed(Cell cell) {
         if (cell.getState().equals(CellState.FLAGGED)
                 || cell.getState().equals(CellState.OPENED)) {
+            logger.warn("Flip action is not allowed at cell {} {}",cell.getRow(),cell.getColumn());
             throw exceptionUtils.buildException("game.action.general.type", "game.action.flip.description",
                     "game.action.general.status");
         }
