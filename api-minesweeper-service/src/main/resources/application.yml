@@ -1,7 +1,7 @@
 server:
   servlet:
     context-path: /api/minesweeper
-  port: 8080
+  port: ${PORT}
 management:
   endpoints:
     enabled-by-default: true
@@ -13,4 +13,4 @@ management:
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://application:foobar@minescluster.jw2wr.mongodb.net/minesweeper?retryWrites=true&w=majority
+      uri: mongodb+srv://application:${DB_PASS}@minescluster.jw2wr.mongodb.net/minesweeper?retryWrites=true&w=majority

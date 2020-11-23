@@ -8,31 +8,35 @@ import com.deviget.minesweeper.service.converters.CellToCellDTOConverter;
 import com.deviget.minesweeper.service.converters.GameMoveDTOToGameMoveConverter;
 import com.deviget.minesweeper.service.converters.GameToGameDTOConverter;
 import com.deviget.minesweeper.service.exception.MinesweeperException;
-import com.deviget.minesweeper.service.model.*;
+import com.deviget.minesweeper.service.model.Board;
+import com.deviget.minesweeper.service.model.Game;
+import com.deviget.minesweeper.service.model.GameAction;
+import com.deviget.minesweeper.service.model.GameMove;
 import com.deviget.minesweeper.service.service.GameService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.servlet.http.Cookie;
-
-@SpringBootTest(classes = {WebConfiguration.class, ConvertersConfiguration.class,
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+                classes = {WebConfiguration.class, ConvertersConfiguration.class,
                             GameToGameDTOConverter.class, BoardToBoardDTOConverter.class,
                             CellToCellDTOConverter.class, GameMoveDTOToGameMoveConverter.class,
                             GameController.class, GameControllerAdvisor.class})
-@EnableWebMvc
+@EnableAutoConfiguration
 @AutoConfigureMockMvc
 public class GameControllerTest {
 

@@ -14,22 +14,22 @@ public class GameToGameDTOConverter implements Converter<Game, GameDTO> {
     private final BoardToBoardDTOConverter boardToBoardDTOConverter;
 
     @Autowired
-    public GameToGameDTOConverter(BoardToBoardDTOConverter boardToBoardDTOConverter){
+    public GameToGameDTOConverter(BoardToBoardDTOConverter boardToBoardDTOConverter) {
         this.boardToBoardDTOConverter = boardToBoardDTOConverter;
     }
 
     @Override
     public GameDTO convert(Game game) {
-        GameStatusDTO status = switch (game.getStatus()){
-            case WON-> GameStatusDTO.WON;
-            case LOST-> GameStatusDTO.LOST;
-            case PLAYING-> GameStatusDTO.PLAYING;
+        GameStatusDTO status = switch (game.getStatus()) {
+            case WON -> GameStatusDTO.WON;
+            case LOST -> GameStatusDTO.LOST;
+            case PLAYING -> GameStatusDTO.PLAYING;
         };
 
         BoardDTO boardDTO = boardToBoardDTOConverter.convert(game.getBoard());
 
-        return new GameDTO(game.getId(),game.getUserId(),boardDTO,game.getCellsFlagged(),
-                           game.getStartTime(),game.getLastMove(),status);
+        return new GameDTO(game.getId(), game.getUserId(), boardDTO,
+                game.getStartTime(), game.getLastMove(), status);
 
     }
 }

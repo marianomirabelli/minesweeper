@@ -9,18 +9,17 @@ public class GameDTO {
     private BoardDTO board;
     private Instant startTime;
     private Instant lastMove;
-    private int cellsFlagged;
     private String userId;
     private GameStatusDTO status;
 
     public GameDTO() {
     }
 
-    public GameDTO(String id,String userId, BoardDTO board,int cellsFlagged ,Instant startTime, Instant lastMove, GameStatusDTO status) {
+    public GameDTO(String id, String userId, BoardDTO board,
+                   Instant startTime, Instant lastMove, GameStatusDTO status) {
         this.id = id;
         this.userId = userId;
         this.board = board;
-        this.cellsFlagged = cellsFlagged;
         this.status = status;
         this.startTime = startTime;
         this.lastMove = lastMove;
@@ -76,11 +75,12 @@ public class GameDTO {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof GameDTO)) return false;
+        if (this == o)
+            return true;
+        if (!(o instanceof GameDTO))
+            return false;
         GameDTO gameDTO = (GameDTO) o;
-        return cellsFlagged == gameDTO.cellsFlagged &&
-                Objects.equals(id, gameDTO.id) &&
+        return  Objects.equals(id, gameDTO.id) &&
                 Objects.equals(board, gameDTO.board) &&
                 Objects.equals(startTime, gameDTO.startTime) &&
                 Objects.equals(lastMove, gameDTO.lastMove) &&
@@ -90,7 +90,7 @@ public class GameDTO {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, board, startTime, lastMove, cellsFlagged, userId, status);
+        return Objects.hash(id, board, startTime, lastMove, userId, status);
     }
 
     @Override
@@ -100,7 +100,6 @@ public class GameDTO {
         sb.append(", board=").append(board);
         sb.append(", startTime=").append(startTime);
         sb.append(", lastMove=").append(lastMove);
-        sb.append(", cellsFlagged=").append(cellsFlagged);
         sb.append(", userId='").append(userId).append('\'');
         sb.append(", status=").append(status);
         sb.append('}');

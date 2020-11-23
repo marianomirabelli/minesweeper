@@ -14,7 +14,6 @@ public class Game {
     private String userId;
     private Instant startTime;
     private Instant lastMove;
-    private int cellsFlagged;
     private boolean hasMadeFirstMove;
     private Board board;
     private GameStatus status;
@@ -24,7 +23,6 @@ public class Game {
     public Game(Board board, String userId){
         this.board = board;
         this.userId = userId;
-        this.cellsFlagged = this.board.getNumberOfMines();
         this.hasMadeFirstMove = false;
         this.startTime = Instant.now();
         this.lastMove = Instant.now();
@@ -77,14 +75,6 @@ public class Game {
 
     public void setStatus(GameStatus status) {
         this.status = status;
-    }
-
-    public int getCellsFlagged() {
-        return cellsFlagged;
-    }
-
-    public void setCellsFlagged(int cellsFlagged) {
-        this.cellsFlagged = cellsFlagged;
     }
 
     public boolean hasMadeFirstMove() {

@@ -15,13 +15,13 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.List;
 import java.util.UUID;
 
 @EnableConfigurationProperties
-@SpringBootTest(classes = App.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+               classes = App.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class GameServiceTest {
 
@@ -135,13 +135,12 @@ public class GameServiceTest {
         GameStatus gameStatusMove1 = gameService
                 .makeMove(gameId, new GameMove(0, 0, GameAction.FLIP), user.getUserName()).getStatus();
 
-       GameStatus gameStatusMove2 = gameService
+        GameStatus gameStatusMove2 = gameService
                 .makeMove(gameId, new GameMove(0, 2, GameAction.FLIP), user.getUserName()).getStatus();
 
         Assertions.assertEquals(GameStatus.PLAYING, gameStatusMove1);
         Assertions.assertEquals(GameStatus.WON, gameStatusMove2);
     }
-
 
     @Test
     public void doOtherActions() {
@@ -152,11 +151,12 @@ public class GameServiceTest {
         Game game = new Game(board, user.getId());
         game.setHasMadeFirstMove(true);
         game = gameRepository.save(game);
-        Game gameAfterFlagged = gameService.makeMove(game.getId(),new GameMove(0,0,GameAction.FLAG),"fooUserName");
+        Game gameAfterFlagged = gameService.makeMove(game.getId(), new GameMove(0, 0, GameAction.FLAG), "fooUserName");
         GameStatus flagged = gameAfterFlagged.getStatus();
-        Game gameAfterMarked = gameService.makeMove(game.getId(),new GameMove(0,0,GameAction.MARK),"fooUserName");
+        Game gameAfterMarked = gameService.makeMove(game.getId(), new GameMove(0, 0, GameAction.MARK), "fooUserName");
         GameStatus markFlagged = gameAfterMarked.getStatus();
-        Game gameAfterRemoveTags = gameService.makeMove(game.getId(),new GameMove(0,0,GameAction.REMOVE_TAG),"fooUserName");
+        Game gameAfterRemoveTags = gameService
+                .makeMove(game.getId(), new GameMove(0, 0, GameAction.REMOVE_TAG), "fooUserName");
         GameStatus removedTags = gameAfterMarked.getStatus();
         Assertions.assertEquals(GameStatus.PLAYING, flagged);
         Assertions.assertEquals(CellState.FLAGGED, gameAfterFlagged.getBoard().getCells()[0][0].getState());
@@ -165,8 +165,6 @@ public class GameServiceTest {
         Assertions.assertEquals(GameStatus.PLAYING, removedTags);
         Assertions.assertEquals(CellState.CLOSED, gameAfterRemoveTags.getBoard().getCells()[0][0].getState());
     }
-
-
 
     @Test
     public void loseGame() {
@@ -189,10 +187,8 @@ public class GameServiceTest {
         Assertions.assertEquals(GameStatus.LOST, gameStatusMove2);
     }
 
-
-
     @Test
-    public void actionsNotAllowed(){
+    public void actionsNotAllowed() {
 
         User user = userRepository.findByUserName("fooUserName").get();
         Cell[][] cells = TestUtils.buildCells(3, 3);
@@ -221,7 +217,6 @@ public class GameServiceTest {
             gameService.makeMove(gameId, new GameMove(1, 2, GameAction.REMOVE_TAG), "fooUserName");
         });
 
-
         Assertions.assertEquals(flipNotAllowed.getType(), "ACTION_NOT_ALLOWED");
         Assertions.assertEquals(flipNotAllowed.getStatus(), 406);
         Assertions.assertEquals(flipNotAllowed.getDetail(), "Only closed or marked cells can be flipped");
@@ -239,8 +234,6 @@ public class GameServiceTest {
         Assertions.assertEquals(removeTagsAllowed.getDetail(), "Only marked or flagged cells can be unmarked");
 
     }
-
-
 
     private void assertCellStatus(CellState cellState, List<Cell> cells) {
         for (Cell cell : cells) {

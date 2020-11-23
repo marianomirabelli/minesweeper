@@ -19,7 +19,7 @@ public class GameDtoToGameConverterTest {
         BoardDTO expectedBoardDTO = Mockito.mock(BoardDTO.class);
         Board board = Mockito.mock(Board.class);
         Game game = new Game(board,"fooUserId");
-        GameDTO expectedGameDto = new GameDTO("gameId","fooUserId",expectedBoardDTO, 0, game.getStartTime(),
+        GameDTO expectedGameDto = new GameDTO("gameId","fooUserId",expectedBoardDTO, game.getStartTime(),
                                               game.getLastMove(),GameStatusDTO.PLAYING);
         game.setId("gameId");
         Mockito.when(boardToBoardDTOConverter.convert(board)).thenReturn(expectedBoardDTO);

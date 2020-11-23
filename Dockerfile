@@ -4,6 +4,6 @@ ARG VERSION
 
 COPY api-minesweeper-service/target/api-minesweeper-service-${VERSION}.jar /app.jar
 
-EXPOSE 8080/tcp
+EXPOSE ${PORT}
 
 CMD ["java","-jar","/app.jar"]
