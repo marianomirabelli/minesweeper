@@ -8,12 +8,12 @@ the user registry. On the other hand, api is a flat module that only contains DT
 would be consumed by another JVM based application (Groovy, Scala, etc.) our consumer can import the dependency directly without
 replicate our model through json or other types of objects.
 
-In terms of persistence, this API saves the data in Mongo DB. The database is available through [Atlas] https://www.mongodb.com/cloud/atlas) 
+In terms of persistence, this API saves the data in Mongo DB. The database is available through [Atlas](https://www.mongodb.com/cloud/atlas) 
 and is deployed as a three-node cluster that is mounted on AWS in the US -East region.
 
-Additionally, the API-Minesweeper is deployed in Heroku as a Docker container.
+Additionally, the API-Minesweeper is deployed in [Heroku](https://dashboard.heroku.com/) as a Docker container.
 
-Finally, there are an http client called MinesweeperConnector.
+Finally, there are a http client called MinesweeperConnector.
 
 ## Technological Stack
 
