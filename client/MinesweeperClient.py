@@ -16,7 +16,7 @@ class MinesweeperConnector(metaclass=MinesweeperConnectorMeta):
    __instance = None
 
    def __init__(self):
-      self.URL = 'http://localhost:8080/api/minesweeper'
+      self.URL = 'https://mmariano-minesweeper.herokuapp.com/api/minesweeper'
       self.cookies = []
       self.headers = {"cache-control": "no-cache", "Content-Type": "application/json"}
 
