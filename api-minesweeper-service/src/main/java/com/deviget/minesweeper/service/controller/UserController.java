@@ -1,8 +1,11 @@
 package com.deviget.minesweeper.service.controller;
 
+import com.deviget.minesweeper.api.GameDTO;
 import com.deviget.minesweeper.api.UserDTO;
 import com.deviget.minesweeper.service.model.User;
 import com.deviget.minesweeper.service.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/users")
+@Api(value = "/users", tags = { "User Controller" })
 public class UserController {
 
     private final UserService userService;
@@ -25,6 +29,9 @@ public class UserController {
         this.userService = userService;
     }
 
+    @ApiOperation(value = "createANewUser",
+                  notes = "Creates a new user. Also this endpoint set the cookie for the user",
+                  response = GameDTO.class)
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO, HttpServletResponse response){
         User user = new User(userDTO.getUserName());

@@ -21,6 +21,11 @@ public class GameValidator {
         this.exceptionUtils = exceptionUtils;
     }
 
+    /**
+     * This method check if a game is in PLAYABLE state. If not this throw an exception
+     * o avoid modifications to finished games.
+     * @param game
+     */
     public void checkIfGameIsPlayable(Game game) {
         if (game.getStatus().equals(GameStatus.LOST) ||
                 game.getStatus().equals(GameStatus.WON)) {
@@ -30,18 +35,33 @@ public class GameValidator {
         }
     }
 
+    /**
+     * This method checks whether the received user is null or not. If the user is null, an exception is thrown.
+     * @param user
+     * @return
+     */
     public User checkIfUserExists(Optional<User> user) {
         return user.orElseThrow(() ->
                 exceptionUtils
                 .buildException("user.not.existent.type", "user.not.existent.description","user.not.existent.status"));
     }
 
+    /**
+     * This method checks whether the received game is null or not. If the game is null, an exception is thrown.
+     * @param opGame
+     * @return
+     */
     public Game checkIfGameExists(Optional<Game> opGame) {
         return opGame.orElseThrow(() ->
                 exceptionUtils
                         .buildException("game.not.found.type", "game.not.found.description", "game.not.found.status"));
     }
 
+    /**
+     * This method validates that a user can only modify a game associated with it
+     * @param game
+     * @param user
+     */
     public void checkIfGameAndUserMatches(Game game, User user) {
         if(!game.getUserId().equals(user.getId())){
             logger.warn("The game {} does not allow to user {}",game.getId(),user.getId());
@@ -50,6 +70,11 @@ public class GameValidator {
         }
     }
 
+    /**
+     * This method checks if the coordinate received is a valid coordinate inside the board.
+     * @param move
+     * @param board
+     */
     public void checkIfItIsAValidCoordinate(GameMove move, Board board) {
         int row = move.getRow();
         int column = move.getColumn();
@@ -61,6 +86,14 @@ public class GameValidator {
         }
     }
 
+    /**
+     This method validates the upper and lower limits of rows and columns allowed to build a new board.
+     Additionally, this method validates the number of mines that have an upper limit
+     that is set as 20% of the number of squares on the board.
+     * @param rows
+     * @param columns
+     * @param mines
+     */
     public void checkIfGameCanBeCreated(int rows, int columns, int mines) {
         int squares = rows * columns;
         int minesPercentage = (int) Math.ceil(squares * 0.20);
@@ -75,7 +108,11 @@ public class GameValidator {
                     "game.row.columns.status");
         }
     }
-
+    /**
+     * This method checks if a FLAG action is allowed.
+     * To achieve this, the cell must not be in the FLAGGED or OPENED state
+     * @param cell
+     */
     public void checkIfFlagActionIsAllowed(Cell cell) {
         if (cell.getState().equals(CellState.FLAGGED)
                 || cell.getState().equals(CellState.OPENED)) {
@@ -85,6 +122,11 @@ public class GameValidator {
         }
     }
 
+    /**
+     * This method checks if a MARK action is allowed.
+     * To achieve this, the cell must not be in the MARKED or OPENED state
+     * @param cell
+     */
     public void checkIfMarkActionIsAllowed(Cell cell) {
         if (cell.getState().equals(CellState.MARKED)
                 || cell.getState().equals(CellState.OPENED)) {
@@ -94,6 +136,11 @@ public class GameValidator {
         }
     }
 
+    /**
+     * This method checks if a REMOVE_TAGS action is allowed.
+     * To achieve this, the cell must be in the MARKED or FLAGGED state
+     * @param cell
+     */
     public void checkIfRemoveTagActionIsAllowed(Cell cell) {
         if (!cell.getState().equals(CellState.FLAGGED)
                 && !cell.getState().equals(CellState.MARKED)) {
@@ -103,6 +150,11 @@ public class GameValidator {
         }
     }
 
+    /**
+     * This method checks if a FLIP action is allowed.
+     * To achieve this, the cell must be in the FLAGGED or CLOSED state
+     * @param cell
+     */
     public void checkIfFlipActionIsAllowed(Cell cell) {
         if (cell.getState().equals(CellState.FLAGGED)
                 || cell.getState().equals(CellState.OPENED)) {

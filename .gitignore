@@ -6,4 +6,5 @@ client/__pycache__/
 *.ear
 .classpath
 .project
+.DS_STORE
 target/

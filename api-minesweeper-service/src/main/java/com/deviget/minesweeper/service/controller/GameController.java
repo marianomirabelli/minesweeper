@@ -30,7 +30,9 @@ public class GameController {
         this.conversionService = conversionService;
     }
 
-    @ApiOperation(value = "startNewGame", notes = "Creates a new game", response = GameDTO.class)
+    @ApiOperation(value = "startNewGame",
+                  notes = "Creates a new game. The user cookie is required to use this endpoint successfully",
+                  response = GameDTO.class)
     @PostMapping
     public ResponseEntity<GameDTO> startNewGame(@CookieValue(name = "userName") String userName,
             @RequestBody StartGameDTO action) {
@@ -41,7 +43,9 @@ public class GameController {
         return responseEntity;
     }
 
-    @ApiOperation(value = "doAction", notes = "Execute an action in the game", response = GameDTO.class)
+    @ApiOperation(value = "doAction",
+                  notes = "Execute an action in the game. The user cookie is required to use this endpoint successfully",
+                  response = GameDTO.class)
     @PatchMapping("{id}")
     public ResponseEntity<GameDTO> playGame(@CookieValue(name = "userName") String userName,
             @PathVariable String id,

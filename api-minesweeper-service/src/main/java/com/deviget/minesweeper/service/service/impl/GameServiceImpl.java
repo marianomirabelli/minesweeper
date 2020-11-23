@@ -33,6 +33,16 @@ public class GameServiceImpl implements GameService {
         this.userRepository = userRepository;
     }
 
+    /**
+     * This method is used to create new games. The user sets the number of rows, columns and mines required to build the board.
+     * The maximum number of rows and columns allowed is 30, while the minimum is 3. On the other hand,
+     * the number of mines has an upper limit equal to 20% of the squares on the board.
+     * @param row
+     * @param columns
+     * @param mines
+     * @param userName
+     * @return
+     */
     @Override
     public Game createNewGame(int row, int columns, int mines, String userName) {
         logger.info("Creating new game for user {}",userName);
@@ -44,6 +54,15 @@ public class GameServiceImpl implements GameService {
         return createdGame;
     }
 
+
+    /**
+     * This method is used to apply users moves. One user is only allowed to play with their associated games.
+     * Additionally, only over games in PLAYABLE state actions are allowed.
+     * @param gameId
+     * @param move
+     * @param userName
+     * @return
+     */
     @Override
     public Game makeMove(String gameId, GameMove move, String userName) {
         User user = gameValidator.checkIfUserExists(userRepository.findByUserName(userName));
@@ -57,7 +76,11 @@ public class GameServiceImpl implements GameService {
         game.setLastMove(Instant.now());
         return repository.save(game);
     }
-
+    /**
+     * This method retrieves a game by id regardless on game status.
+     * @param id
+     * @return
+     */
     @Override
     public Optional<Game> findByGameId(String id) {
         return repository.findById(id);

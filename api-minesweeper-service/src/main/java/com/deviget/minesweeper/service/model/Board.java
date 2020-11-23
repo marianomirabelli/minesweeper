@@ -33,6 +33,12 @@ public class Board {
         this.initializeMinesWithCoordinates(minesCoordinates);
     }
 
+    /**
+     * This method returns the neighbors of the cell.
+     * The neighbors are usually eight but could be fewer if it is a border cell.
+     * @param cell
+     * @return
+     */
     public List<Cell> getNeighbours(Cell cell) {
         int rowPosition = cell.getRow();
         int columnPosition = cell.getColumn();
@@ -57,6 +63,13 @@ public class Board {
         return neighboursCells;
     }
 
+    /**
+     * Algorithm based on BFS algorithm. When a blank cell is detected,
+     * the algorithm is going through all blank neighbours until reach a not blank cell.Additionally,
+     * this algorithm detects mines cells. When a mine is detected, all board  mines are revealed and
+     * the algorithm will finished.
+     * @param cell
+     */
     public void floodFlip(Cell cell) {
         Queue<Cell> queue = new LinkedList();
         Set<Cell> visited = new HashSet<>();
@@ -71,6 +84,28 @@ public class Board {
                 } else {
                     flipNeighbours(currentCell, queue);
                 }
+            }
+        }
+    }
+
+    /**
+     * This method populates the mines in the board. Mines are randomly placed
+     * avoiding open cells as a result of the first user move on the board.
+     * @param firstMovementRow
+     * @param firstMovementColumn
+     */
+    public void initializeMines(int firstMovementRow, int firstMovementColumn) {
+        int minesPlaces = 0;
+        this.mines = new ArrayList<>(numberOfMines);
+        while (minesPlaces < this.numberOfMines) {
+            int row = (int) (Math.random() * this.rows);
+            int column = (int) (Math.random() * this.columns);
+            Cell currentCell = this.cells[row][column];
+            if (!currentCell.isMine()
+                    && (row != firstMovementRow && column != firstMovementColumn)
+                    && (!currentCell.getState().equals(CellState.OPENED))) {
+                this.placeMine(row, column);
+                minesPlaces++;
             }
         }
     }
@@ -114,21 +149,6 @@ public class Board {
         }
     }
 
-    public void initializeMines(int firstMovementRow, int firstMovementColumn) {
-        int minesPlaces = 0;
-        this.mines = new ArrayList<>(numberOfMines);
-        while (minesPlaces < this.numberOfMines) {
-            int row = (int) (Math.random() * this.rows);
-            int column = (int) (Math.random() * this.columns);
-            Cell currentCell = this.cells[row][column];
-            if (!currentCell.isMine()
-                 && (row != firstMovementRow && column != firstMovementColumn)
-                 && (!currentCell.getState().equals(CellState.OPENED))) {
-                this.placeMine(row, column);
-                minesPlaces++;
-            }
-        }
-    }
 
     private void placeMine(int row, int column) {
         this.cells[row][column].setMine(true);

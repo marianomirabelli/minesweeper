@@ -24,6 +24,14 @@ public class GameHandler {
         this.flipAction.put(Boolean.TRUE, (g, c) -> flipAction(g, c));
     }
 
+    /**
+     * This method manages the different actions of the users. There are four possible actions FLIP, FLAG, MARK, and REMOVE_TAGS.
+     * The latter is used to clean a cell when it was previously marked or flagged.
+     * Also, this method manages the user's first move, in order to place the mines after the first move.
+     * @param game
+     * @param move
+     * @return
+     */
     public GameStatus handleAction(Game game, GameMove move) {
 
         Board board = game.getBoard();
