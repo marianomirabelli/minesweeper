@@ -20,21 +20,23 @@ if __name__ == "__main__":
     }
 
     print("Creating new Game")
-    gameResponse = minesweeper_connector.create_game(newGame)
-    gameStatus = gameResponse['status']
-    id = gameResponse['id']
-    while(gameStatus=='PLAYING'):
+    game_response = minesweeper_connector.create_game(newGame)
+    game_status = game_response['status']
+    id = game_response['id']
+    while(game_status=='PLAYING'):
         try:
 
-            gameMove = {
-                "row":random.random() * 4 ,
-                "column":random.random() * 4,
+            game_move = {
+                "row":random.randint(0,4) ,
+                "column":random.randint(0,4),
                 "action": "FLIP"
             }
-            response = minesweeper_connector.play_game(id,gameMove)
-            gameStatus = response['status']
+            print("Executing FLIP action at cell %s %s" % (game_move['row'], game_move['column']))
+            response = minesweeper_connector.play_game(id, game_move)
+            game_status = response['status']
         except Exception as e:
-              print(e)
+            print('The FLIP action has failed at cell %s %s due to %s'%(game_move['row'],game_move['column'],e))
 
-    print('The user "%s has %s' %(user['userName'],gameStatus))
+    game_response = minesweeper_connector.get_game(game_response['id'])
+    print('The user "%s has %s the game id %s ' %(user['userName'],game_status,game_response['id']))
 
