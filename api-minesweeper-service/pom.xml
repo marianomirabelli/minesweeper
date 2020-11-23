@@ -17,12 +17,10 @@
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <app.mainClass>com.deviget.minesweeper.service.App</app.mainClass>
         <jackson.version>2.11.3</jackson.version>
-        <slf4j.version>1.7.30</slf4j.version>
         <junit.version>5.7.0</junit.version>
         <mockito.version>3.6.0</mockito.version>
         <swagger.version>3.0.0</swagger.version>
         <flapdoodle.embed.mongo.versiion>2.2.0</flapdoodle.embed.mongo.versiion>
-        <api-minesweeper-api.version>0.0.1-SNAPSHOT</api-minesweeper-api.version>
     </properties>
 
 
