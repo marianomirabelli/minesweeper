@@ -4,7 +4,9 @@ import com.deviget.minesweeper.api.CellDTO;
 import com.deviget.minesweeper.api.CellStateDTO;
 import com.deviget.minesweeper.service.model.Cell;
 import com.deviget.minesweeper.service.model.CellState;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 public class CellDtoToCellConverterTest {
 
